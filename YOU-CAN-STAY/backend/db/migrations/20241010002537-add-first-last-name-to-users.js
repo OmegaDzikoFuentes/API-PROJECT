@@ -10,11 +10,11 @@ options.tableName = 'Users';
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.addColumn(options, 'Users', 'firstName', {
+    await queryInterface.addColumn(options, 'firstName', {
       type: Sequelize.STRING,
       allowNull: false,
     });
-    await queryInterface.addColumn(options, 'Users', 'lastName', {
+    await queryInterface.addColumn(options, 'lastName', {
       type: Sequelize.STRING,
       allowNull: false,
     });
