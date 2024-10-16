@@ -2,7 +2,7 @@
 
 /** @type {import('sequelize-cli').Migration} */
 
-const { User } = require('../models');
+const { User } = require('../models/user');
 const bcrypt = require('bcryptjs');
 
 let options = {};
@@ -12,7 +12,7 @@ if (process.env.NODE_ENV === 'production') {
 
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await User.bulkCreate([
+    await User.bulkCreate(options,[
       {
         email: 'human.persons@example.com',
         username: 'human_persons',

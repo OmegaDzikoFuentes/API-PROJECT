@@ -2,7 +2,7 @@
 
 /** @type {import('sequelize-cli').Migration} */
 
-const { Spot } = require('../models');
+const { Spot } = require('../models/spot');
 
 let options = {};
 if (process.env.NODE_ENV === 'production') {
@@ -11,7 +11,7 @@ if (process.env.NODE_ENV === 'production') {
 
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await Spot.bulkCreate([
+    await Spot.bulkCreate(options, [
       {
         ownerId: 1,  // Human Persons
         address: '1221 Grove St',

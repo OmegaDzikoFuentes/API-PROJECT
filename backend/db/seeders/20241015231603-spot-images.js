@@ -2,7 +2,7 @@
 
 /** @type {import('sequelize-cli').Migration} */
 
-const { SpotImage } = require('../models');
+const { SpotImage } = require('../models/spotimage');
 
 let options = {};
 if (process.env.NODE_ENV === 'production') {
@@ -11,7 +11,7 @@ if (process.env.NODE_ENV === 'production') {
 
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await SpotImage.bulkCreate([
+    await SpotImage.bulkCreate(options,[
       {
         spotId: 1,
         url: 'https://example.com/condo1.jpg',

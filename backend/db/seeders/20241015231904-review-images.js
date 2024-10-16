@@ -2,7 +2,7 @@
 
 /** @type {import('sequelize-cli').Migration} */
 
-const { Review } = require('../models');
+const { Review } = require('../models/review');
 
 let options = {};
 if (process.env.NODE_ENV === 'production') {
@@ -11,7 +11,7 @@ if (process.env.NODE_ENV === 'production') {
 
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await Review.bulkCreate([
+    await Review.bulkCreate(options, [
       {
         spotId: 1,
         userId: 2,
