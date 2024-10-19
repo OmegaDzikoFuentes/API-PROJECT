@@ -3,7 +3,7 @@ const { check } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
 const { requireAuth } = require('../../utils/auth');
 const { Spot, Booking, SpotImage, User, Review } = require('../../db/models');
-const { Op } = require('sequelize');
+const { Op, Sequelize } = require('sequelize');
 
 const router = express.Router();
 
@@ -11,35 +11,45 @@ const router = express.Router();
 const validateSpot = [
   check('address')
     .exists({ checkFalsy: true })
-    .withMessage('Please provide a valid address.'),
+    .notEmpty()
+    .withMessage('Address is required.'),
   check('city')
     .exists({ checkFalsy: true })
-    .withMessage('Please provide a valid city.'),
+    .notEmpty()
+    .withMessage('City is required.'),
   check('state')
     .exists({ checkFalsy: true })
-    .withMessage('Please provide a valid state.'),
+    .notEmpty()
+    .withMessage('State is required.'),
   check('country')
     .exists({ checkFalsy: true })
-    .withMessage('Please provide a valid country.'),
+    .notEmpty()
+    .withMessage('Country is required.'),
   check('lat')
     .exists({ checkFalsy: true })
-    .isDecimal()
-    .withMessage('Please provide a valid latitude.'),
+    .notEmpty()
+    .withMessage('Latitude is required.')
+    .isFloat({ min: -90, max: 90 })
+    .withMessage('Latitude must be between -90 and 90.'),
   check('lng')
     .exists({ checkFalsy: true })
-    .isDecimal()
-    .withMessage('Please provide a valid longitude.'),
+    .notEmpty()
+    .withMessage('Longitude is required.')
+    .isFloat({ min: -180, max: 180 })
+    .withMessage('Longitude must be between -180 and 180.'),
   check('name')
     .exists({ checkFalsy: true })
-    .withMessage('Please provide a valid name.'),
+    .notEmpty()
+    .withMessage('Name is required.'),
   check('description')
     .exists({ checkFalsy: true })
-    .withMessage('Please provide a valid description.'),
+    .notEmpty()
+    .withMessage('Description is required.'),
   check('price')
     .exists({ checkFalsy: true })
-    .isDecimal()
-    .withMessage('Please provide a valid price.'),
-  handleValidationErrors,
+    .notEmpty()
+    .withMessage('Price is required.'),
+  handleValidationErrors
 ];
 
 
@@ -211,15 +221,16 @@ router.get('/:spotId', async (req, res, next) => {
   const { spotId } = req.params;
 
   try {
+    // Find the spot by its ID
     const spot = await Spot.findByPk(spotId, {
       include: [
         {
-          model: SpotImage,
-          attributes: ['id', 'url', 'preview'],
-        },
-        {
           model: User,
           attributes: ['id', 'firstName', 'lastName'],
+        },
+        {
+          model: SpotImage,
+          attributes: ['id', 'url', 'preview'],
         },
       ],
     });
@@ -230,18 +241,17 @@ router.get('/:spotId', async (req, res, next) => {
       });
     }
 
-    const reviews = await Review.findAll({
-      where: {
-        spotId: spot.id,
-      },
+    // Get the number of reviews and average star rating
+    const numReviews = await Review.count({
+      where: { spotId: spot.id },
+    });
+    const avgStarRating = await Review.findOne({
+      where: { spotId: spot.id },
+      attributes: [[Sequelize.fn('AVG', Sequelize.col('stars')), 'avgStarRating']],
     });
 
-    const numReviews = reviews.length;
-    const avgStarRating = numReviews > 0
-      ? reviews.reduce((total, review) => total + review.starRating, 0) / numReviews
-      : 0;
-
-    const spotDetails = {
+    // response
+    res.json({
       id: spot.id,
       ownerId: spot.ownerId,
       address: spot.address,
@@ -255,22 +265,24 @@ router.get('/:spotId', async (req, res, next) => {
       price: spot.price,
       createdAt: spot.createdAt,
       updatedAt: spot.updatedAt,
-      numReviews,
-      avgStarRating,
-      SpotImages: spot.SpotImages,
-      Owner: {
-        id: spot.Owner.id,
-        firstName: spot.Owner.firstName,
-        lastName: spot.Owner.lastName,
-      },
-    };
-
-    return res.json(spotDetails);
-
+      numReviews: numReviews,
+      avgStarRating: parseFloat(avgStarRating?.dataValues.avgStarRating || 0).toFixed(2),
+      SpotImages: spot.SpotImages.map(image => ({
+        id: image.id,
+        url: image.url,
+        preview: image.preview,
+      })),
+      User: {
+          id: spot.User.id,
+          firstName: spot.User.firstName,
+          lastName: spot.User.lastName,
+        },
+    });
   } catch (err) {
     next(err);
   }
 });
+
 
 // GET /api/spots/:spotId/bookings - Returns all bookings for a specified spot
 router.get('/:spotId/bookings', requireAuth, async (req, res, next) => {
