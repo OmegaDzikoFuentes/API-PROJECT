@@ -3,7 +3,10 @@
 /** @type {import('sequelize-cli').Migration} */
 
 const { User } = require('../models');
+<<<<<<< HEAD
 
+=======
+>>>>>>> 71f2f8af3852b948e7a2e025060e4b99937bfafd
 const bcrypt = require("bcryptjs");
 
 let options = {};
