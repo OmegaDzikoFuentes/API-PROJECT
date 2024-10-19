@@ -10,17 +10,17 @@ const { User } = require('../../db/models');
 const router = express.Router();
 
 // Validation middleware for login
+// Validation middleware for login --updated with 400 code validation feature
 const validateLogin = [
   check('credential')
     .exists({ checkFalsy: true })
     .notEmpty()
-    .withMessage('Please provide a valid email or username.'),
+    .withMessage('Please provide a valid email or username.'), // Credential is required
   check('password')
     .exists({ checkFalsy: true })
-    .withMessage('Please provide a password.'),
-  handleValidationErrors,
+    .withMessage('Please provide a password.'), // Password is required
+  handleValidationErrors,  // Handle any validation errors and return 400 status
 ];
-
 // Restore session user - GET /api/session
 router.get('/', (req, res) => {
   const { user } = req;

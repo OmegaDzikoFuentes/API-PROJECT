@@ -2,7 +2,7 @@
 
 /** @type {import('sequelize-cli').Migration} */
 
-const { Spot } = require('../models/spot');
+const { Spot } = require('../models');
 
 let options = {};
 if (process.env.NODE_ENV === 'production') {
@@ -11,7 +11,7 @@ if (process.env.NODE_ENV === 'production') {
 
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await Spot.bulkCreate(options, [
+    await Spot.bulkCreate([
       {
         ownerId: 1,  // Human Persons
         address: '1221 Grove St',
@@ -42,7 +42,7 @@ module.exports = {
   async down(queryInterface, Sequelize) {
     options.tableName = 'Spots';
     const Op = Sequelize.Op;
-    return queryInterface.bulkDelete(options, {
+    return queryInterface.bulkDelete({
       name: { [Op.in]: ['Penthouse in the Sky', 'Lovely Neighborhood'] }
     }, {});
   }

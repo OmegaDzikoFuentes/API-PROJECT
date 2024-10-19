@@ -2,38 +2,33 @@
 const { Model } = require('sequelize');
 
 module.exports = (sequelize, DataTypes) => {
-  class Booking extends Model {
+  class SpotImage extends Model {
     static associate(models) {
-      Booking.belongsTo(models.Spot, { foreignKey: 'spotId', onDelete: 'CASCADE' });
-      Booking.belongsTo(models.User, { foreignKey: 'userId', onDelete: 'CASCADE' });
+      SpotImage.belongsTo(models.Spot, { foreignKey: 'spotId', onDelete: 'CASCADE' });
     }
   }
 
-  Booking.init(
+  SpotImage.init(
     {
       spotId: {
         type: DataTypes.INTEGER,
         allowNull: false,
         references: { model: 'Spots', key: 'id' }
       },
-      userId: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        references: { model: 'Users', key: 'id' }
-      },
-      startDate: {
-        type: DataTypes.DATEONLY,
+      url: {
+        type: DataTypes.STRING,
         allowNull: false,
       },
-      endDate: {
-        type: DataTypes.DATEONLY,
+      preview: {
+        type: DataTypes.BOOLEAN,
         allowNull: false,
+        defaultValue: false
       }
     },
     {
       sequelize,
-      modelName: 'Booking',
+      modelName: 'SpotImage',
     }
   );
-  return Booking;
+  return SpotImage;
 };

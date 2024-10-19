@@ -2,7 +2,7 @@
 
 /** @type {import('sequelize-cli').Migration} */
 
-const { Review } = require('../models/review');
+const { Review } = require('../models');
 
 let options = {};
 if (process.env.NODE_ENV === 'production') {
@@ -11,7 +11,7 @@ if (process.env.NODE_ENV === 'production') {
 
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await Review.bulkCreate(options, [
+    await Review.bulkCreate([
       {
         spotId: 1,
         userId: 2,
@@ -30,7 +30,7 @@ module.exports = {
   async down(queryInterface, Sequelize) {
     options.tableName = 'Reviews';
     const Op = Sequelize.Op;
-    return queryInterface.bulkDelete(options, {
+    return queryInterface.bulkDelete({
       review: { [Op.in]: ['Amazing spot, beautiful views!', 'Cozy condo, perfect for a getaway.'] }
     }, {});
   }

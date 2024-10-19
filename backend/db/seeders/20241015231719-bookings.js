@@ -2,7 +2,7 @@
 
 /** @type {import('sequelize-cli').Migration} */
 
-const { Booking } = require('../models/booking');
+const { Booking } = require('../models');
 
 let options = {};
 if (process.env.NODE_ENV === 'production') {
@@ -11,7 +11,7 @@ if (process.env.NODE_ENV === 'production') {
 
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await Booking.bulkCreate(options,[
+    await Booking.bulkCreate([
       {
         spotId: 1,
         userId: 2,
@@ -30,7 +30,7 @@ module.exports = {
   async down(queryInterface, Sequelize) {
     options.tableName = 'Bookings';
     const Op = Sequelize.Op;
-    return queryInterface.bulkDelete(options, {
+    return queryInterface.bulkDelete({
       startDate: { [Op.in]: ['2024-12-01', '2024-11-10'] }
     }, {});
   }
