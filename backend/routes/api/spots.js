@@ -52,6 +52,28 @@ const validateSpot = [
   handleValidationErrors
 ];
 
+// GET /api/spots - Returns all spots
+router.get('/', async (req, res, next) => {
+  try {
+    const spots = await Spot.findAll({
+      include: [
+        {
+          model: SpotImage,
+          attributes: ['id', 'url', 'preview'],
+        },
+        {
+          model: User,
+          attributes: ['id', 'firstName', 'lastName'],
+        },
+      ],
+    });
+
+    return res.json(spots);
+  } catch (err) {
+    next(err);
+  }
+});
+
 
 // POST /api/spots - Create a new spot
 router.post('/', requireAuth, validateSpot, async (req, res, next) => {
