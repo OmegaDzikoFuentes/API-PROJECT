@@ -13,6 +13,7 @@ router.use(restoreUser);
 
 
 
+
 router.use('/spots', spotsRouter);
 
 router.use('/session', sessionRouter);

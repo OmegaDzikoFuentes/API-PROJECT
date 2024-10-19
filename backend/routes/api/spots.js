@@ -1,5 +1,5 @@
 const express = require('express');
-const { check } = require('express-validator');
+const { check, validationResult } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
 const { requireAuth } = require('../../utils/auth');
 const { Spot, Booking, SpotImage, User, Review } = require('../../db/models');
@@ -100,7 +100,70 @@ router.post('/', requireAuth, validateSpot, async (req, res, next) => {
   }
 });
 
-// Validation middleware for the booking dates
+//Validation middleware for review
+const validateReview = [
+  check('review').exists({ checkFalsy: true }).withMessage('Review text is required.'),
+  check('stars').exists({ checkFalsy: true }).isInt({ min: 1, max: 5 }).withMessage('Stars must be an integer from 1 to 5.'),
+  (req, res, next) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      res.status(400);
+      return res.json({
+        message: 'Validation error',
+        statusCode: 400,
+        errors: errors.array(),
+      });
+    }
+    next();
+  },
+];
+
+// POST /api/spots/:spotId/reviews - review for spot by ID
+router.post('/:spotId/reviews', requireAuth, validateReview, async (req, res, next) => {
+  const { spotId } = req.params;
+  const { review, stars } = req.body;
+  const { user } = req;
+
+  try {
+    // Check if spot exists
+    const spot = await Spot.findByPk(spotId);
+    if (!spot) {
+      res.status(404);
+      return res.json({
+        message: "Does Not Exist",
+        statusCode: 404,
+      });
+    }
+
+    // Check if the current user already reviewed the spot
+    const existingReview = await Review.findOne({ where: { spotId, userId: user.id } });
+    if (existingReview) {
+      res.status(403);
+      return res.json({
+        message: "You've already reviewed this location",
+        statusCode: 403,
+      });
+    }
+
+    // Create the new review
+    const newReview = await Review.create({ userId: user.id, spotId, review, stars });
+
+    // Return the created review
+    return res.json({
+      id: newReview.id,
+      userId: newReview.userId,
+      spotId: newReview.spotId,
+      review: newReview.review,
+      stars: newReview.stars,
+      createdAt: newReview.createdAt,
+      updatedAt: newReview.updatedAt,
+    });
+  } catch (err) {
+    next(err);
+  }
+});
+
+// Validation middleware booking dates
 const validateBooking = [
   check('startDate')
     .exists({ checkFalsy: true })
