@@ -527,6 +527,40 @@ router.post('/:spotId/images', requireAuth, async (req, res, next) => {
   }
 });
 
+// GET /api/spots/:spotId/reviews
+router.get('/:spotId/reviews', async (req, res) => {
+  const { spotId } = req.params;
+
+  // Check if spot exists
+  const spot = await Spot.findByPk(spotId);
+  if (!spot) {
+    return res.status(404).json({
+      message: "Spot couldn't be found",
+      statusCode: 404
+    });
+  }
+
+  // Find all reviews for the spot
+  const reviews = await Review.findAll({
+    where: { spotId },
+    include: [
+      {
+        model: User,
+        attributes: ['id', 'firstName', 'lastName']
+      },
+      {
+        model: ReviewImage,
+        attributes: ['id', 'url']
+      }
+    ]
+  });
+
+  // Format the response
+  res.json({
+    Reviews: reviews
+  });
+});
+
 
 
 // DELETE /api/spots/:spotId - Deletes an existing spot
