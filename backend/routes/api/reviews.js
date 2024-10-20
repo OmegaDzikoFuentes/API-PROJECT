@@ -2,6 +2,7 @@
 const express = require('express');
 const { Review, User, Spot, ReviewImage, SpotImage } = require('../../db/models');
 const { requireAuth } = require('../../utils/auth');  // Middleware for authentication
+const { check, validationResult } = require('express-validator');
 const router = express.Router();
 
 // GET /api/reviews/current
@@ -87,5 +88,73 @@ router.post('/:reviewId/images', requireAuth, async (req, res) => {
       res.status(500).json({ message: "Internal server error" });
     }
   });
+
+  //vallidation middleware for review body and stars
+  const validateReview = [
+    check('review')
+      .exists({ checkFalsy: true })
+      .withMessage('Review text is required'),
+    check('stars')
+      .isInt({ min: 1, max: 5 })
+      .withMessage('Stars must be an integer between 1 and 5'),
+  ]
+
+  // PUT /reviews/:reviewId
+router.put(
+    '/:reviewId',
+    requireAuth,
+    validateReview,
+    async (req, res) => {
+      const { review, stars } = req.body;
+      const reviewId = req.params.reviewId;
+      const userId = req.user.id;
+
+      // Check validation result
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(400).json({
+          message: 'Validation error',
+          errors: errors.array().map((error) => error.msg),
+        });
+      }
+
+      try {
+      
+        const existingReview = await Review.findByPk(reviewId);
+
+        // check review exists
+        if (!existingReview) {
+
+          return res.status(404).json({ message: 'Review not found' });
+        }
+
+        // match review and user
+        if (existingReview.userId !== userId) {
+
+          return res.status(403).json({ message: 'You do not have permission to edit this review' });
+        }
+
+        // db update review
+        existingReview.review = review;
+        existingReview.stars = stars;
+        await existingReview.save();
+
+        // updated review data
+        return res.status(200).json({
+          id: existingReview.id,
+          userId: existingReview.userId,
+          spotId: existingReview.spotId,
+          review: existingReview.review,
+          stars: existingReview.stars,
+          createdAt: existingReview.createdAt,
+          updatedAt: existingReview.updatedAt,
+        });
+
+      } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Internal server error' });
+      }
+    }
+  );
 
 module.exports = router;
