@@ -527,72 +527,45 @@ router.post('/:spotId/images', requireAuth, async (req, res, next) => {
   }
 });
 
-// GET /api/spots/:spotId/reviews
-router.get('/:spotId/reviews', async (req, res) => {
-  const { spotId } = req.params;
-
-  // Check if spot exists
-  const spot = await Spot.findByPk(spotId);
-  if (!spot) {
-    return res.status(404).json({
-      message: "Spot couldn't be found",
-      statusCode: 404
-    });
-  }
-
-  // Find all reviews for the spot
-  const reviews = await Review.findAll({
-    where: { spotId },
-    include: [
-      {
-        model: User,
-        attributes: ['id', 'firstName', 'lastName']
-      },
-      {
-        model: ReviewImage,
-        attributes: ['id', 'url']
-      }
-    ]
-  });
-
-  // Format the response
-  res.json({
-    Reviews: reviews
-  });
-});
 
 
 
-// DELETE /api/spots/:spotId - Deletes an existing spot
+// DELETE /api/spots/:spotId - Delete a spot
 router.delete('/:spotId', requireAuth, async (req, res, next) => {
   const { spotId } = req.params;
   const { user } = req;
 
   try {
+
     const spot = await Spot.findByPk(spotId);
 
+    // check if spot exists
     if (!spot) {
       return res.status(404).json({
-        message: 'Spot not found'
+        message: 'Spot not found',
+        statusCode: 404,
       });
     }
 
+    // check if user is owner
     if (spot.ownerId !== user.id) {
       return res.status(403).json({
-        message: 'Unauthorized: You are not the owner of this spot'
+        message: 'Only the owner of the spot can delete it',
+        statusCode: 403,
       });
     }
 
+    // erase spot
     await spot.destroy();
 
-    return res.status(200).json({
-      message: 'Spot successfully deleted'
-    });
 
+    return res.json({
+      message: 'Successfully deleted',
+      statusCode: 200,
+    });
   } catch (err) {
     next(err);
   }
 });
-
 
 module.exports = router;
