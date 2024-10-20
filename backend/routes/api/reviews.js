@@ -59,7 +59,7 @@ router.post('/:reviewId/images', requireAuth, async (req, res) => {
       // make sure review and user match
       if (review.userId !== userId) {
 
-        return res.status(403).json({ message: "This Revie Does Not Belong to You" });
+        return res.status(403).json({ message: "This Review Does Not Belong to You" });
       }
 
       // Setting max

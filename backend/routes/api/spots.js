@@ -442,7 +442,7 @@ router.put('/:spotId', requireAuth, validateSpot, async (req, res, next) => {
     // Check if user is owner
     if (spot.ownerId !== user.id) {
       return res.status(403).json({
-        message: 'Unauthorized: You are not the owner of this spot',
+        message: 'only the owner can edit a spot',
       });
     }
 
@@ -526,7 +526,6 @@ router.post('/:spotId/images', requireAuth, async (req, res, next) => {
       next(err);
   }
 });
-
 
 
 
