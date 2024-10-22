@@ -1,72 +1,84 @@
 const express = require('express');
 const bcrypt = require('bcryptjs');
+
+const { setTokenCookie, requireAuth } = require('../../utils/auth');
+const { User } = require('../../db/models');
+
 const { check } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
-const { setTokenCookie } = require('../../utils/auth');
-const { User } = require('../../db/models');
 
 const router = express.Router();
 
+// Sign up
+// router.post('/', async (req, res) => {
+//     const { email, password, username, firstName, lastName } = req.body;
+//     const hashedPassword = bcrypt.hashSync(password);
+//     const user = await User.create({ email, username, hashedPassword, firstName, lastName });
+
+//     const safeUser = {
+//         id: user.id,
+//         email: user.email,
+//         firstName: firstName,
+//         lastName: lastName
+//     };
+
+//     await setTokenCookie(res, safeUser);
+
+//     return res.json({
+//         safeUser
+//     });
+// });
+
 const validateSignup = [
     check('email')
-      .exists({ checkFalsy: true })
-      .isEmail()
-      .withMessage('Please provide a valid email.'),
+        .exists({ checkFalsy: true })
+        .isEmail()
+        .notEmpty()
+        .withMessage('Email is required.')
+        .withMessage('Please provide a valid email.'),
     check('username')
-      .exists({ checkFalsy: true })
-      .isLength({ min: 4 })
-      .withMessage('Please provide a username with at least 4 characters.'),
+        .exists({ checkFalsy: true })
+        .notEmpty()
+        .withMessage('User name is required.')
+        .isLength({ min: 4 })
+        .withMessage('Please provide a username with at least 4 characters.'),
     check('username')
-      .not()
-      .isEmail()
-      .withMessage('Username cannot be an email.'),
+        .not()
+        .isEmail()
+        .withMessage('Username cannot be an email.'),
     check('password')
-      .exists({ checkFalsy: true })
-      .isLength({ min: 6 })
-      .withMessage('Password must be 6 characters or more.'),
+        .exists({ checkFalsy: true })
+        .notEmpty()
+        .withMessage('Password is required.')
+        .isLength({ min: 6 })
+        .withMessage('Password must be 6 characters or more.'),
     check('firstName')
-      .exists({ checkFalsy: true })
-      .isLength({ min: 2 })
-      .withMessage('Please provide a valid first name.'),
+        .exists({ checkFalsy: true })
+        .notEmpty(),
     check('lastName')
-      .exists({ checkFalsy: true })
-      .isLength({ min: 2 })
-      .withMessage('Please provide a valid last name.'),
-    handleValidationErrors,
-  ];
+        .exists({ checkFalsy: true })
+        .notEmpty(),
+    handleValidationErrors
+];
 
-// Sign up - POST /api/users
-router.post('/', validateSignup, async (req, res, next) => {
-  const { email, password, username, firstName, lastName } = req.body;
-
-  // Hash the password
-  const hashedPassword = bcrypt.hashSync(password);
-
-  // Create new user
-  try {
-    const user = await User.create({
-      email,
-      username,
-      firstName,  // Include firstName
-      lastName,   // Include lastName
-      hashedPassword,
-    });
+router.post('/', validateSignup, async (req, res) => {
+    const { email, password, username, firstName, lastName } = req.body;
+    const hashedPassword = bcrypt.hashSync(password);
+    //added firstname lastname
+    const user = await User.create({ email, username, firstName, lastName, hashedPassword });
 
     const safeUser = {
-      id: user.id,
-      firstName: user.firstName, // Include firstName
-      lastName: user.lastName,   // Include lastName
-      email: user.email,
-      username: user.username,
+        id: user.id,
+        email: user.email,
+        firstName: firstName,
+        lastName: lastName
     };
 
-    // Set token cookie
     await setTokenCookie(res, safeUser);
 
-    return res.json({ user: safeUser });
-  } catch (err) {
-    next(err);
-  }
+    return res.json({
+        safeUser
+    });
 });
 
 module.exports = router;
