@@ -5,6 +5,7 @@ const usersRouter = require('./users.js');
 const reviewsRouter = require('./reviews');
 const spotImagesRouter = require('./spot-images');
 const reviewImagesRouter = require('./review-images');
+const bookingsRouter = require('./bookings');
 
 const { restoreUser } = require("../../utils/auth.js");
 const spotsRouter = require('./spots');
@@ -14,6 +15,8 @@ const spotsRouter = require('./spots');
   // If current user session is not valid, set req.user to null
 router.use(restoreUser);
 
+
+router.use('/bookings', bookingsRouter);
 
 router.use('/review-images', reviewImagesRouter);
 

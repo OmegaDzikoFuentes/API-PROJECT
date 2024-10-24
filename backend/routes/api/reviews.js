@@ -39,8 +39,41 @@ router.get('/current', async (req, res, next) => {
     ]
   });
 
+  const formattedReviews = reviews.map(review => ({
+    id: review.id,
+    userId: review.userId,
+    spotId: review.spotId,
+    review: review.review,
+    stars: review.stars,
+    createdAt: review.createdAt,
+    updatedAt: review.updatedAt,
+    User: {
+      id: user.id,
+      firstName: user.firstName,
+      lastName: user.lastName
+    },
+    Spot: {
+      id: review.Spot.id,
+      ownerId: review.Spot.ownerId,
+      address: review.Spot.address,
+      city: review.Spot.city,
+      state: review.Spot.state,
+      country: review.Spot.country,
+      lat: review.Spot.lat,
+      lng: review.Spot.lng,
+      name: review.Spot.name,
+      price: review.Spot.price,
+      previewImage: review.Spot.SpotImages[0]?.url || null
+    },
+    ReviewImages: review.ReviewImages.map(image => ({
+      id: image.reviewId,
+      url: image.url
+    }))
+  }))
+
+
   res.json({
-    reviews
+    Reviews: formattedReviews
   });
 });
 
@@ -55,7 +88,7 @@ router.post('/:reviewId/images', requireAuth, async (req, res) => {
 
     //when there is no matching review
     if (!review) {
-      return res.status(404).json({ message: "Review couldn't be found." });
+      return res.status(404).json({ message: "Review couldn't be found" });
     }
 
     // make sure review and user match
@@ -85,7 +118,9 @@ router.post('/:reviewId/images', requireAuth, async (req, res) => {
 
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: "Internal server error" });
+    return res.status(500).json({
+      message: 'Internal server error'
+    });
   }
 });
 
@@ -101,50 +136,36 @@ const validateReview = [
 
 // PUT /reviews/:reviewId
 router.put('/:reviewId', requireAuth, validateReview, async (req, res) => {
-    const { review, stars } = req.body;
-    const reviewId = req.params.reviewId;
-    const userId = req.user.id;
+  const { review, stars } = req.body;
+  const reviewId = req.params.reviewId;
+  const userId = req.user.id;
 
-    // Check validation result
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({
-        message: 'Validation error',
-        errors: errors.array().map((error) => error.msg),
-      });
+  try {
+    const existingReview = await Review.findByPk(reviewId);
+
+    // check review exists
+    if (!existingReview) {
+      return res.status(404).json({ message: "Review couldn't be found" });
     }
 
-    try {
-
-      const existingReview = await Review.findByPk(reviewId);
-
-      // check review exists
-      if (!existingReview) {
-
-        return res.status(404).json({ message: 'Review not found' });
-      }
-
-      // match review and user
-      if (existingReview.userId !== userId) {
-
-        return res.status(403).json({ message: 'You do not have permission to edit this review' });
-      }
-
-      // db update review
-      existingReview.review = review;
-      existingReview.stars = stars;
-      await existingReview.save();
-
-      // updated review data
-      return res.status(200).json({
-        existingReview
-      });
-
-    } catch (error) {
-      console.error(error);
-      res.status(500).json({ message: 'Internal server error' });
+    // match review and user
+    if (existingReview.userId !== userId) {
+      return res.status(403).json({ message: 'You do not have permission to edit this review' });
     }
+
+    // db update review
+    existingReview.review = review;
+    existingReview.stars = stars;
+    await existingReview.save();
+
+    // updated review data
+    return res.json(existingReview);
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Internal server error' });
   }
+}
 );
 
 // DELETE /reviews/:reviewId
@@ -158,19 +179,19 @@ router.delete('/:reviewId', requireAuth, async (req, res) => {
 
     // check review exists
     if (!review) {
-      return res.status(404).json({ message: "Review coudln't be found" });
+      return res.status(404).json({ message: "Review couldn't be found" });
     }
 
     // match review and user
     if (review.userId !== userId) {
-      return res.status(403).json({ message: 'You do not have permission to delete this review' });
+      return res.status(403).json('You do not have permission to delete this review');
     }
 
     //Delete the review
     await review.destroy();
 
     // return success message
-    return res.status(200).json({ message: 'Successfully deleted' });
+    return res.status(200).json('Successfully deleted');
 
   } catch (error) {
     console.error(error);

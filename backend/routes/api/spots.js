@@ -15,28 +15,34 @@ router.get('/', async (req, res, next) => {
 
   page = parseInt(page);
   size = parseInt(size);
-  minLat = parseInt(minLat);
-  maxLat = parseInt(maxLat);
-  minLng = parseInt(minLng);
-  maxLng = parseInt(maxLng);
-  minPrice = parseInt(minPrice);
-  maxPrice = parseInt(maxPrice);
+  minLat = parseFloat(minLat);
+  maxLat = parseFloat(maxLat);
+  minLng = parseFloat(minLng);
+  maxLng = parseFloat(maxLng);
+  minPrice = parseFloat(minPrice);
+  maxPrice = parseFloat(maxPrice);
 
-  if (Number.isNaN(page) || page < 0) page = 1;
-  if (Number.isNaN(size) || size < 0) size = 20;
-  if (Number.isNaN(minLat) || minLat < -90) minLat = -90;
-  if (Number.isNaN(maxLat) || maxLat > 90) maxLat = 90;
-  if (Number.isNaN(minLng) || minLng < -180) minLng = -180;
-  if (Number.isNaN(maxLng) || maxLng > 180) maxLng = 180;
-  if (Number.isNaN(minPrice) || minPrice < 0) minPrice = 0;
-  if (Number.isNaN(maxPrice) || maxPrice < 0) maxPrice = 10000000;
+  // Validate and provide defaults
+  if (!page || page < 1 || page > 10) page = 1;
+  if (!size || size < 1 || size > 20) size = 20;
+  if (minLat && (minLat < -90 || minLat > 90)) return res.status(400).json({ message: "Invalid minLat" });
+  if (maxLat && (maxLat < -90 || maxLat > 90)) return res.status(400).json({ message: "Invalid maxLat" });
+  if (minLng && (minLng < -180 || minLng > 180)) return res.status(400).json({ message: "Invalid minLng" });
+  if (maxLng && (maxLng < -180 || maxLng > 180)) return res.status(400).json({ message: "Invalid maxLng" });
+  if (minPrice && minPrice < 0) return res.status(400).json({ message: "Invalid minPrice" });
+  if (maxPrice && maxPrice < 0) return res.status(400).json({ message: "Invalid maxPrice" });
+
+  //where is able to change
+  const where = {};
+  if (minLat) where.lat = { [Op.gte]: minLat };
+  if (maxLat) where.lat = { ...where.lat, [Op.lte]: maxLat };
+  if (minLng) where.lng = { [Op.gte]: minLng };
+  if (maxLng) where.lng = { ...where.lng, [Op.lte]: maxLng };
+  if (minPrice) where.price = { [Op.gte]: minPrice };
+  if (maxPrice) where.price = { ...where.price, [Op.lte]: maxPrice };
 
   const spots = await Spot.findAll({
-    where: {
-      lat: { [Op.between]: [minLat, maxLat] },
-      lng: { [Op.between]: [minLng, maxLng] },
-      price: { [Op.between]: [minPrice, maxPrice] }
-    },
+    where,
     attributes: {
       include: [
         [Sequelize.fn('AVG', Sequelize.col('Reviews.stars')), 'avgRating']
@@ -76,11 +82,12 @@ router.get('/', async (req, res, next) => {
   })).slice(size * (page - 1), size * page);
 
   res.json({
-    formattedSpots,
+    Spots: formattedSpots,
     page,
     size
   });
 });
+
 
 // Validation middleware for creating a spot
 const validateSpot = [
@@ -202,7 +209,10 @@ router.get('/current', requireAuth, async (req, res, next) => {
       previewImage: spot.SpotImages[0]?.url || null
     }));
 
-    return res.json(formattedSpots);
+    //Changed format for error matching
+    return res.json({
+      Spots: formattedSpots
+    });
   } catch (err) {
     next(err);
   }
@@ -242,7 +252,7 @@ router.get('/:spotId', async (req, res, next) => {
 
     if (!spot) {
       return res.status(404).json({
-        message: 'Spot not found',
+        message: "Spot couldn't be found",
       });
     }
 
@@ -280,7 +290,7 @@ router.get('/:spotId', async (req, res, next) => {
     }
 
     // response
-    res.json({ formattedSpot });
+    res.json(formattedSpot);
   } catch (err) {
     next(err);
   }
@@ -330,7 +340,7 @@ router.get('/:spotId/reviews', requireAuth, async (req, res, next) => {
 
     // Return the review
     return res.json({
-      reviews
+      Review: reviews
     });
   } catch (err) {
     next(err);
@@ -358,7 +368,7 @@ router.post('/:spotId/reviews', requireAuth, validateReview, async (req, res, ne
     if (existingReview) {
       res.status(500);
       return res.json({
-        message: "User has already has a review for this spot"
+        message: "User already has a review for this spot"
       });
     }
 
@@ -367,7 +377,7 @@ router.post('/:spotId/reviews', requireAuth, validateReview, async (req, res, ne
 
     // Return the created review
     return res.status(201).json({
-      newReview
+      Review: newReview
     });
   } catch (err) {
     next(err);
@@ -429,7 +439,7 @@ router.post('/:spotId/bookings', requireAuth, validateBooking, async (req, res, 
   try {
     const spot = await Spot.findByPk(spotId);
     if (!spot) {
-      const err = new Error('Spot not found');
+      const err = new Error("Spot couldn't be found");
       err.status = 404;
       return next(err);
     }
@@ -485,7 +495,7 @@ router.get('/:spotId/bookings', requireAuth, async (req, res, next) => {
     const spot = await Spot.findByPk(spotId);
     if (!spot) {
       return res.status(404).json({
-        message: 'Spot not found',
+        message: "Spot couldn't be found",
       });
     }
 
@@ -543,7 +553,7 @@ router.put('/:spotId', requireAuth, validateSpot, async (req, res, next) => {
     const spot = await Spot.findByPk(spotId);
     if (!spot) {
       return res.status(404).json({
-        message: 'Spot not found',
+        message: "Spot couldn't be found",
       });
     }
 
@@ -647,7 +657,7 @@ router.delete('/:spotId', requireAuth, async (req, res, next) => {
     // check if spot exists
     if (!spot) {
       return res.status(404).json({
-        message: 'Spot not found',
+        message: "Spot couldn't be found",
         statusCode: 404,
       });
     }
