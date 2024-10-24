@@ -81,7 +81,7 @@ router.get('/', async (req, res, next) => {
     previewImage: spot.SpotImages[0]?.url || null
   })).slice(size * (page - 1), size * page);
 
-  res.json({
+  return res.status(200).json({  // added return and status for tests to pass
     Spots: formattedSpots,
     page,
     size
@@ -156,7 +156,7 @@ router.post('/', requireAuth, validateSpot, async (req, res, next) => {
       price
     });
 
-    res.status(201).json(spot);
+    return res.status(201).json(spot); //added return and status for tests to pass
   } catch (err) {
     next(err);
   }
