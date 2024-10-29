@@ -3,7 +3,7 @@ const { Op } = require('sequelize');
 const bcrypt = require('bcryptjs');
 
 
-const { setTokenCookie, restoreUser, requireAuth } = require('../../utils/auth');
+const { requireAuth } = require('../../utils/auth');
 const { User, Review, Spot, ReviewImage, SpotImage } = require('../../db/models');
 
 const { check, validationResult } = require('express-validator');
@@ -12,7 +12,7 @@ const { handleValidationErrors } = require('../../utils/validation');
 const router = express.Router();
 
 // GET /api/reviews/current - Retrieve all reviews of the current user
-router.get('/current', async (req, res, next) => {
+router.get('/current', requireAuth, async (req, res, next) => {
   const { user } = req;
   const reviews = await Review.findAll({
     where: {
@@ -72,16 +72,16 @@ router.get('/current', async (req, res, next) => {
   }))
 
 
-  return res.json({  //added return word
+  return res.json({   //added return word
     Reviews: formattedReviews
   });
 });
 
 // POST /reviews/:reviewId/images
-router.post('/:reviewId/images', requireAuth, async (req, res) => {
+router.post('/:reviewId/images', requireAuth, async (req, res, next) => {
   const { url } = req.body;
-  const reviewId = req.params.reviewId;
-  const userId = req.user.id;
+  const { reviewId } = req.params;
+  const { user } = req;
 
   try {
     const review = await Review.findByPk(reviewId);
@@ -92,7 +92,7 @@ router.post('/:reviewId/images', requireAuth, async (req, res) => {
     }
 
     // make sure review and user match
-    if (review.userId !== userId) {
+    if (review.userId !== user.id) {
       return res.status(403).json({ message: "This Review Does Not Belong to You" });
     }
 
@@ -116,11 +116,8 @@ router.post('/:reviewId/images', requireAuth, async (req, res) => {
       url: newImage.url,
     });
 
-  } catch (error) {
-    console.error(error);
-    return res.status(500).json({
-      message: 'Internal server error'
-    });
+  } catch (er) {
+    next(err);
   }
 });
 
@@ -130,15 +127,17 @@ const validateReview = [
     .exists({ checkFalsy: true })
     .withMessage('Review text is required'),
   check('stars')
+    .exists({ checkFalsy: true })
     .isInt({ min: 1, max: 5 })
     .withMessage('Stars must be an integer between 1 and 5'),
+  handleValidationErrors
 ]
 
 // PUT /reviews/:reviewId
-router.put('/:reviewId', requireAuth, validateReview, async (req, res) => {
+router.put('/:reviewId', requireAuth, validateReview, async (req, res, next) => {
   const { review, stars } = req.body;
-  const reviewId = req.params.reviewId;
-  const userId = req.user.id;
+  const { reviewId } = req.params;
+  const { user } = req;
 
   try {
     const existingReview = await Review.findByPk(reviewId);
@@ -149,7 +148,7 @@ router.put('/:reviewId', requireAuth, validateReview, async (req, res) => {
     }
 
     // match review and user
-    if (existingReview.userId !== userId) {
+    if (existingReview.userId !== user.id) {
       return res.status(403).json({ message: 'You do not have permission to edit this review' });
     }
 
@@ -161,17 +160,15 @@ router.put('/:reviewId', requireAuth, validateReview, async (req, res) => {
     // updated review data
     return res.json(existingReview);
 
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Internal server error' });
+  } catch (err) {
+    next(err)
   }
-}
-);
+});
 
 // DELETE /reviews/:reviewId
-router.delete('/:reviewId', requireAuth, async (req, res) => {
-  const reviewId = req.params.reviewId;
-  const userId = req.user.id;
+router.delete('/:reviewId', requireAuth, async (req, res, next) => {
+  const { reviewId } = req.params;
+  const { user } = req;
 
   try {
 
@@ -183,7 +180,7 @@ router.delete('/:reviewId', requireAuth, async (req, res) => {
     }
 
     // match review and user
-    if (review.userId !== userId) {
+    if (review.userId !== user.id) {
       return res.status(403).json('You do not have permission to delete this review');
     }
 
@@ -191,11 +188,10 @@ router.delete('/:reviewId', requireAuth, async (req, res) => {
     await review.destroy();
 
     // return success message
-    return res.status(200).json('Successfully deleted');
+    return res.status(200).json({ message: 'Successfully deleted' });
 
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Internal server error' });
+  } catch (err) {
+    next(err)
   }
 });
 

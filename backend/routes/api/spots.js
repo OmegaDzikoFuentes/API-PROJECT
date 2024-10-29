@@ -10,27 +10,85 @@ const { requireAuth } = require('../../utils/auth');
 const router = express.Router();
 
 // GET /api/spots - Retrieve all spots
-router.get('/', async (req, res, next) => {
+router.get('/', async (req, res) => {
   let { page, size, minLat, maxLat, minLng, maxLng, minPrice, maxPrice } = req.query;
 
-  page = parseInt(page);
-  size = parseInt(size);
-  minLat = parseFloat(minLat);
-  maxLat = parseFloat(maxLat);
-  minLng = parseFloat(minLng);
-  maxLng = parseFloat(maxLng);
-  minPrice = parseFloat(minPrice);
-  maxPrice = parseFloat(maxPrice);
+  const errors = {} //added errors
 
-  // Validate and provide defaults
-  if (!page || page < 1 || page > 10) page = 1;
-  if (!size || size < 1 || size > 20) size = 20;
-  if (minLat && (minLat < -90 || minLat > 90)) return res.status(400).json({ message: "Invalid minLat" });
-  if (maxLat && (maxLat < -90 || maxLat > 90)) return res.status(400).json({ message: "Invalid maxLat" });
-  if (minLng && (minLng < -180 || minLng > 180)) return res.status(400).json({ message: "Invalid minLng" });
-  if (maxLng && (maxLng < -180 || maxLng > 180)) return res.status(400).json({ message: "Invalid maxLng" });
-  if (minPrice && minPrice < 0) return res.status(400).json({ message: "Invalid minPrice" });
-  if (maxPrice && maxPrice < 0) return res.status(400).json({ message: "Invalid maxPrice" });
+  // Page validation
+  if (page !== undefined) {
+    page = parseInt(page);
+    if (Number.isNaN(page) || page < 1) {
+      errors.page = "Page must be greater than or equal to 1";
+    }
+  }
+
+  // Size validation
+  if (size !== undefined) {
+    size = parseInt(size);
+    if (Number.isNaN(size) || size < 1) {
+      errors.size = "Size must be greater than or equal to 1";
+    }
+  }
+
+  // Latitude validation
+  if (minLat !== undefined) {
+    minLat = parseFloat(minLat);
+    if (Number.isNaN(minLat) || minLat < -90 || minLat > 90) {
+      errors.minLat = "Minimum latitude is invalid";
+    }
+  }
+
+  if (maxLat !== undefined) {
+    maxLat = parseFloat(maxLat);
+    if (Number.isNaN(maxLat) || maxLat < -90 || maxLat > 90) {
+      errors.maxLat = "Maximum latitude is invalid";
+    }
+  }
+
+  // Longitude validation
+  if (minLng !== undefined) {
+    minLng = parseFloat(minLng);
+    if (Number.isNaN(minLng) || minLng < -180 || minLng > 180) {
+      errors.minLng = "Minimum longitude is invalid";
+    }
+  }
+
+  if (maxLng !== undefined) {
+    maxLng = parseFloat(maxLng);
+    if (Number.isNaN(maxLng) || maxLng < -180 || maxLng > 180) {
+      errors.maxLng = "Maximum longitude is invalid";
+    }
+  }
+
+  // Price validation
+  if (minPrice !== undefined) {
+    minPrice = parseFloat(minPrice);
+    if (Number.isNaN(minPrice) || minPrice < 0) {
+      errors.minPrice = "Minimum price must be greater than or equal to 0";
+    }
+  }
+
+  if (maxPrice !== undefined) {
+    maxPrice = parseFloat(maxPrice);
+    if (Number.isNaN(maxPrice) || maxPrice < 0) {
+      errors.maxPrice = "Maximum price must be greater than or equal to 0";
+    }
+  }
+
+  // If there are any validation errors, return 400 response
+  if (Object.keys(errors).length > 0) {
+    return res.status(400).json({
+      message: "Bad Request",
+      errors: errors
+    });
+  }
+
+  // Set defaults if not provided or invalid
+  if (!page || page < 1) page = 1;
+  if (!size || size < 1) size = 20;
+  if (page > 10) page = 10;
+  if (size > 20) size = 20;
 
   //where is able to change
   const where = {};
@@ -70,11 +128,11 @@ router.get('/', async (req, res, next) => {
     city: spot.city,
     state: spot.state,
     country: spot.country,
-    lat: spot.lat,
-    lng: spot.lng,
+    lat: parseFloat(spot.lat),
+    lng: parseFloat(spot.lng),
     name: spot.name,
     description: spot.description,
-    price: spot.price,
+    price: parseFloat(spot.price),
     createdAt: spot.createdAt,
     updatedAt: spot.updatedAt,
     avgRating: Number(spot.dataValues.avgRating).toFixed(1),
@@ -156,7 +214,7 @@ router.post('/', requireAuth, validateSpot, async (req, res, next) => {
       price
     });
 
-    return res.status(201).json(spot); //added return and status for tests to pass
+    return res.status(201).json(spot); //added return word
   } catch (err) {
     next(err);
   }
@@ -290,7 +348,7 @@ router.get('/:spotId', async (req, res, next) => {
     }
 
     // response
-    res.json(formattedSpot);
+    return res.json(formattedSpot); //added return word
   } catch (err) {
     next(err);
   }
@@ -340,7 +398,7 @@ router.get('/:spotId/reviews', requireAuth, async (req, res, next) => {
 
     // Return the review
     return res.json({
-      Review: reviews
+      Reviews: reviews
     });
   } catch (err) {
     next(err);
@@ -376,9 +434,7 @@ router.post('/:spotId/reviews', requireAuth, validateReview, async (req, res, ne
     const newReview = await Review.create({ userId: user.id, spotId, review, stars });
 
     // Return the created review
-    return res.status(201).json({
-      Review: newReview
-    });
+    return res.status(201).json(newReview);
   } catch (err) {
     next(err);
   }
