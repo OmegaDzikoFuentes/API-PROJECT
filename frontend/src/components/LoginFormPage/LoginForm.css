@@ -1,0 +1,77 @@
+/* CyberTronTheme.css */
+body {
+    font-family: 'Orbitron', sans-serif; /* Futuristic font for cyber feel */
+    background-color: #000000; /* Deep black background */
+    color: #00ffff; /* Neon cyan text */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    overflow: hidden;
+  }
+
+  form {
+    background: rgba(0, 0, 0, 0.8); /* Semi-transparent black form */
+    padding: 30px;
+    border-radius: 10px;
+    border: 2px solid #00ffff; /* Neon border */
+    box-shadow: 0 0 20px #00ffff, 0 0 40px #ff00ff; /* Glow effect */
+    width: 350px;
+    text-align: center;
+  }
+
+  h1 {
+    font-size: 2rem;
+    margin-bottom: 20px;
+    color: #ff00ff; /* Neon pink */
+    text-transform: uppercase;
+    text-shadow: 0 0 10px #ff00ff, 0 0 20px #ff00ff;
+  }
+
+  label {
+    display: block;
+    margin-bottom: 10px;
+    font-size: 1.2rem;
+  }
+
+  input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: none;
+    background: #1a1a1a; /* Dark background for inputs */
+    color: #00ffff;
+    border-bottom: 2px solid #ff00ff;
+  }
+
+  input:focus {
+    outline: none;
+    border-bottom: 2px solid #00ffff;
+    box-shadow: 0 0 10px #00ffff;
+  }
+
+  button {
+    width: 100%;
+    padding: 10px;
+    background: linear-gradient(45deg, #00ffff, #ff00ff);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    text-transform: uppercase;
+    box-shadow: 0 0 15px #ff00ff, 0 0 25px #00ffff;
+  }
+
+  button:hover {
+    background: linear-gradient(45deg, #ff00ff, #00ffff);
+    box-shadow: 0 0 25px #00ffff, 0 0 35px #ff00ff;
+  }
+
+  p {
+    color: #ff5555; /* Neon red for error messages */
+    font-size: 1rem;
+    text-shadow: 0 0 5px #ff5555;
+  }
+
