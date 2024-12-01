@@ -1,0 +1,43 @@
+/* Navigation.css */
+ul {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    background-color: #fff;
+    padding: 16px 32px;
+    border-bottom: 1px solid #ddd;
+  }
+
+  li {
+    margin: 0 10px;
+  }
+
+  a {
+    text-decoration: none;
+    color: #333;
+    font-size: 16px;
+    font-weight: 500;
+    padding: 8px 16px;
+    border-radius: 8px;
+  }
+
+  a:hover {
+    background-color: #f7f7f7;
+  }
+
+  a.active {
+    background-color: #ff5a5f;
+    color: white;
+  }
+
+  .ProfileButton {
+    display: flex;
+    align-items: center;
+    padding: 18px 36px;
+    background-color: #00a699;
+    color: white;
+    border-radius: 8px;
+  }
