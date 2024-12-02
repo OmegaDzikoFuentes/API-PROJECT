@@ -41,3 +41,7 @@ ul {
     color: white;
     border-radius: 8px;
   }
+
+  .hidden {
+    display: none;
+  }
