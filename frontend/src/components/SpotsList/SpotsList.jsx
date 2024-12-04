@@ -19,7 +19,7 @@ function SpotsList() {
                 <div key={spot.id} className="spot-tile">
                     {/* <img src={spot.previewImage} alt={`${spot.name}`} /> */}
                     <div className="spot-info">
-                        <h3 title={spot.name}>{`${spot.city}, ${spot.state}`}</h3>
+                        <p>{spot.name},{`${spot.city}, ${spot.state}`}</p>
                         {/* <p>
                             {spot.averageRating ? `⭐️ ${spot.averageRating.toFixed(1)}` : 'New'}
                         </p> */}

@@ -29,7 +29,7 @@ ul {
   }
 
   a.active {
-    background-color: #ff5a5f;
+    background-color: #0F9D58;
     color: white;
   }
 
@@ -37,7 +37,7 @@ ul {
     display: flex;
     align-items: center;
     padding: 18px 36px;
-    background-color: #00a699;
+    background-color: #EAA221;
     color: white;
     border-radius: 8px;
   }

@@ -36,7 +36,7 @@ input {
 button {
   width: 100%;
   padding: 12px;
-  background-color: #ff5a5f;
+  background-color: #EAA221;
   color: #fff;
   border: none;
   border-radius: 8px;
@@ -46,11 +46,11 @@ button {
 }
 
 button:hover {
-  background-color: #e04347;
+  background-color: #EAA221;
 }
 
 p {
-  color: red;
+  color: #0F9D58;
   font-size: 12px;
   margin-top: -12px;
   margin-bottom: 12px;
