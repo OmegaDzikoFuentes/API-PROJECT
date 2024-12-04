@@ -10,6 +10,7 @@ const setSpots = (spots) => ({
 export const getSpots = () => async (dispatch) => {
     const response = await csrfFetch('/api/spots');
     const data = await response.json();
+    console.log("xxxxxxxxxx data", data)
     dispatch(setSpots(data.Spots));
   };
 
