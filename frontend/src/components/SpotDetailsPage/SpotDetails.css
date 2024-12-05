@@ -1,0 +1,94 @@
+.spot-details-container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+
+  h4 {
+    font-size: 28px;
+
+  }
+
+  .location {
+    font-size: 18px;
+    color: #555;
+    margin-bottom: 20px;
+  }
+
+  .images-container {
+    display: flex;
+    gap: 20px;
+  }
+
+  .main-image {
+    width: 50%;
+    height: 412px;
+    object-fit: cover;
+  }
+
+  .small-images {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    width: 50%;
+  }
+
+  .small-images img {
+    width: 100%;
+    height: 205px;
+    object-fit: cover;
+  }
+
+  .details-content {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+  }
+
+  .hosted-by {
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+
+  .reviews-section {
+    margin-top: 20px;
+  }
+
+  .post-review-button {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+
+  .post-review-button:hover {
+    background-color: #0056b3;
+  }
+
+  .reserve-box {
+    background: #f7f7f7;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    text-align: center;
+  }
+
+  .price {
+    font-size: 24px;
+    margin-bottom: 10px;
+  }
+
+  button {
+    background-color: #ff5a5f;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+
+  button:hover {
+    background-color: #e04347;
+  }

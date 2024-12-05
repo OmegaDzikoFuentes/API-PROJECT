@@ -28,6 +28,7 @@
   .spot-info {
     padding: 12px;
     text-align: left;
+    border: none;
   }
 
   .spot-details {
