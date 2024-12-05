@@ -32,14 +32,14 @@ function SpotsList() {
             className="spot-image"
           />
           <div className="spot-info">
-            <h3>{`${spot.city}, ${spot.state}`}</h3>
-            <p>
-              {spot.averageRating
-                ? `⭐ ${spot.averageRating.toFixed(1)}`
-                : "New"}
-            </p>
-            <p>{`$${spot.price} / night`}</p>
-          </div>
+  <div className="spot-details">
+    <span>{`${spot.city}, ${spot.state}`}</span>
+    <span className="spot-rating">
+      {spot.averageRating ? `⭐ ${spot.averageRating.toFixed(1)}` : "New"}
+    </span>
+  </div>
+  <p>{`$${spot.price} / night`}</p>
+</div>
         </div>
       ))}
     </div>

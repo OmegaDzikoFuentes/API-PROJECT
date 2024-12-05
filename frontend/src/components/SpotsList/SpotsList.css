@@ -27,14 +27,26 @@
 
   .spot-info {
     padding: 12px;
-    text-align: center;
+    text-align: left;
   }
 
-  .spot-info h3 {
-    margin: 0;
-    font-size: 18px;
+  .spot-details {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .spot-details span {
+    font-size: 14px;
+    color: #555;
+  }
+
+  .spot-rating {
+    font-size: 14px;
+    color: #ff9500;
     font-weight: bold;
   }
+
 
   .spot-info p {
     margin: 5px 0;
