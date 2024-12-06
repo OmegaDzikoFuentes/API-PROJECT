@@ -11,14 +11,18 @@ function Navigation({ isLoaded }) {
   return (
     <div className="navigation">
       <div className="logo">
-        {/* FontAwesome Airbnb logo */}
         <FontAwesomeIcon icon={faAirbnb} className="favicon" />
         <NavLink to="/" className="nav-brand">
           AirBnB
         </NavLink>
       </div>
       {isLoaded && (
-        <div className="profile-button-container">
+        <div className="nav-links">
+          {sessionUser && (
+            <NavLink to="/spots/new" className="create-spot-button">
+              Create a New Spot
+            </NavLink>
+          )}
           <ProfileButton user={sessionUser} />
         </div>
       )}
