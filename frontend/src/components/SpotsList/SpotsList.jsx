@@ -27,7 +27,7 @@ function SpotsList() {
           title={spot.name} // Tooltip with spot name
         >
           <img
-            src={spot.previewImage || "../images/"} // Fallback image if none provided
+            src={spot.previewImage || "https://farm7.staticflickr.com/6089/6115759179_86316c08ff_z_d.jpg"} // Fallback image if none provided
             alt={spot.name}
             className="spot-image"
           />
