@@ -48,11 +48,19 @@ function SpotDetails() {
           </div>
         </div>
         <div className="reserve-box">
+    <div className="reserve-box-content">
           <p className="price">{`$${spot.price} / night`}</p>
-          <button onClick={handleReserveClick}>Reserve</button>
-        </div>
-      </div>
-    </div>
+  <div className="rating-info">
+  <span>{`⭐ ${spot.averageRating || 'New'}`}</span>
+      {spot.reviewsCount !== undefined && (
+        <span>· {`${spot.reviewsCount} reviews`}</span>
+      )}
+  </div>
+  </div>
+  <button onClick={handleReserveClick}>Reserve</button>
+</div>
+</div>
+</div>
   );
 }
 

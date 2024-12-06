@@ -70,15 +70,37 @@
   .reserve-box {
     background: #f7f7f7;
     padding: 20px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    text-align: center;
+    border: 2px solid #555; /* Thicker border */
+    border-radius: 12px; /* Rounded edges */
+    width: 300px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 10px;
+  }
+
+  .reserve-box-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
   }
 
   .price {
     font-size: 24px;
-    margin-bottom: 10px;
+    font-weight: bold;
   }
+
+  .rating-info {
+    font-size: 14px;
+    color: #555;
+    display: flex;
+    align-items: center;
+  }
+
+  .rating-info span {
+    margin-left: 5px;
+  }
+
 
   button {
     background-color: #ff5a5f;
