@@ -6,6 +6,7 @@ import * as sessionActions from './store/session';
 import SpotsList from './components/SpotsList/SpotsList';
 import SpotDetails from './components/SpotDetailsPage/SpotDetails';
 import CreateSpotForm from './components/CreateSpotFormPage/CreateSpotForm';
+import ManageSpots from './components/SpotsList/ManageSpots';
 
 function Layout() {
   const dispatch = useDispatch();
@@ -42,6 +43,10 @@ const router = createBrowserRouter([
   {
     path: '/spots/new',
     element: <CreateSpotForm />,
+  },
+  {
+    path: '/manage-spots',
+    element: <ManageSpots />
   }
  ]
 }

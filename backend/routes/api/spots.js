@@ -196,7 +196,7 @@ const validateSpot = [
 
 // POST /api/spots - Create a new spot
 router.post('/', requireAuth, validateSpot, async (req, res, next) => {
-
+  
   const { address, city, state, country, lat, lng, name, description, price } = req.body;
   const ownerId = req.user.id; // Use the authenticated user's id
 

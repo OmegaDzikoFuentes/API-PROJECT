@@ -1,20 +1,22 @@
 import { useState, useEffect, useRef } from "react";
-import { NavLink } from "react-router-dom";
 import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import { GiAztecCalendarSun } from "react-icons/gi";
 import * as sessionActions from "../../store/session";
-import OpenModalMenuItem from "./OpenModalMenuItem";
 import LoginFormModal from "../LoginFormModal/LoginFormModal";
 import SignupFormModal from "../SignupFormModal/SignupFormModal";
+import OpenModalButton from "../OpenModalButton/OpenModalButton";
 
 function ProfileButton({ user }) {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [showMenu, setShowMenu] = useState(false);
   const ulRef = useRef();
 
   const toggleMenu = (e) => {
     e.stopPropagation();
-    setShowMenu(!showMenu);
+    setShowMenu((prev) => !prev);
   };
 
   useEffect(() => {
@@ -31,15 +33,14 @@ function ProfileButton({ user }) {
     return () => document.removeEventListener("click", closeMenu);
   }, [showMenu]);
 
-  const closeMenu = () => setShowMenu(false);
-
-  const logout = (e) => {
+  const logout = async (e) => {
     e.preventDefault();
-    dispatch(sessionActions.logout());
-    closeMenu();
+    await dispatch(sessionActions.logout());
+    navigate("/");
+    setShowMenu(false);
   };
 
-  const ulClassName = "profile-dropdown" + (showMenu ? "" : " hidden");
+  const ulClassName = `profile-dropdown ${showMenu ? "" : "hidden"}`;
 
   return (
     <div className="profile-button">
@@ -49,29 +50,33 @@ function ProfileButton({ user }) {
       <ul className={ulClassName} ref={ulRef}>
         {user ? (
           <>
-            <li>{user.firstName}</li>
-            <li>{user.email}</li>
-            <li>
-              <NavLink to="/manage-spots" onClick={closeMenu}>
-                Manage Spots
-              </NavLink>
-            </li>
-            <li>
+            <ul className="button-detail">Hello, {user.firstName}</ul>
+            <ul className="button-detail">{user.email}</ul>
+            <ul>
+                  <NavLink className="button-detail" to="/manage-spots" onClick={() => setShowMenu(false)}>
+                      Manage Spots
+                  </NavLink>
+            </ul>
+            <ul className="button-detail">
               <button onClick={logout}>Log Out</button>
-            </li>
+            </ul>
           </>
         ) : (
           <>
-            <OpenModalMenuItem
-              itemText="Log In"
-              onItemClick={closeMenu}
-              modalComponent={<LoginFormModal />}
-            />
-            <OpenModalMenuItem
-              itemText="Sign Up"
-              onItemClick={closeMenu}
-              modalComponent={<SignupFormModal />}
-            />
+            <ul className="button-detail">
+              <OpenModalButton
+                modalComponent={<LoginFormModal />}
+                buttonText="Log In"
+                onButtonClick={() => setShowMenu(false)}
+              />
+            </ul>
+            <ul className="button-detail">
+              <OpenModalButton
+                modalComponent={<SignupFormModal />}
+                buttonText="Sign Up"
+                onButtonClick={() => setShowMenu(false)}
+              />
+            </ul>
           </>
         )}
       </ul>

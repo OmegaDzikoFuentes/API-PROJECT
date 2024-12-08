@@ -69,7 +69,7 @@ function CreateSpotForm() {
       lat: formData.lat, // lat is required
       lng: formData.lng, // lng is required
     };
-
+     
     const response = await dispatch(createSpot(formDataWithCoordinates));
     if (response.errors) {
       setErrors(response.errors);
