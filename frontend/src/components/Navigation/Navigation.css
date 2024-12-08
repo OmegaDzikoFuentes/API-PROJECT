@@ -116,3 +116,8 @@
   border-radius: 4px;
 
 }
+
+.manage-spots {
+  text-decoration: none;
+  margin: -30px;
+}

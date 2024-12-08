@@ -41,7 +41,7 @@ export const getUserSpots = () => async (dispatch) => {
 export const createSpot = (spotData) => async (dispatch) => {
  const response = await csrfFetch("/api/spots", {
     method: "POST",
-  
+
     body: JSON.stringify(spotData),
   });
 
@@ -50,6 +50,21 @@ export const createSpot = (spotData) => async (dispatch) => {
 
   if (response.ok) {
     dispatch(addSpot(data));
+    return data;
+  } else {
+    return { errors: data.errors };
+  }
+};
+
+export const updateSpot = (spotData) => async (dispatch) => {
+  const response = await csrfFetch(`/api/spots/${spotData.id}`, {
+    method: "PUT",
+    body: JSON.stringify(spotData),
+  });
+
+  const data = await response.json();
+  if (response.ok) {
+    dispatch(addSpot(data)); // Update the spot in the store
     return data;
   } else {
     return { errors: data.errors };

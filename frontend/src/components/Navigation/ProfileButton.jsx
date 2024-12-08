@@ -53,8 +53,8 @@ function ProfileButton({ user }) {
             <ul className="button-detail">Hello, {user.firstName}</ul>
             <ul className="button-detail">{user.email}</ul>
             <ul>
-                  <NavLink className="button-detail" to="/manage-spots" onClick={() => setShowMenu(false)}>
-                      Manage Spots
+                  <NavLink className="button-detail manage-spots" to="/manage-spots" onClick={() => setShowMenu(false)}>
+                  Manage Spots
                   </NavLink>
             </ul>
             <ul className="button-detail">
