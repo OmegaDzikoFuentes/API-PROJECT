@@ -7,7 +7,11 @@ import "./SpotsList.css";
 function ManageSpots() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const userSpots = useSelector((state) => state.spots || []);
+  const userSpots = useSelector((state) =>
+    state.spots.byId
+      ? Object.values(state.spots.byId).filter((spot) => spot.ownerId === state.session.user?.id)
+      : []
+  );
 
   useEffect(() => {
     dispatch(getUserSpots());

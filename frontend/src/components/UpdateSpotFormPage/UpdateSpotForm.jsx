@@ -7,9 +7,7 @@ function UpdateSpotForm() {
   const { spotId } = useParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const spot = useSelector((state) =>
-    state.spots.find((spot) => spot.id === Number(spotId))
-  );
+  const spot = useSelector((state) => state.spots.byId[spotId]);
 
   const [formData, setFormData] = useState({
     country: '',

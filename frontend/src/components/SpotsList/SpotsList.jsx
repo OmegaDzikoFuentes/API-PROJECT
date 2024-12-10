@@ -7,7 +7,7 @@ import "./SpotsList.css";
 function SpotsList() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const spots = useSelector((state) => state.spots || []);
+  const spots = useSelector((state) => state.spots.allIds.map((id) => state.spots.byId[id]));
 
   useEffect(() => {
     dispatch(getSpots());

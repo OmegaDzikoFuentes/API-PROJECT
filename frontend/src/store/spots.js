@@ -1,10 +1,10 @@
 import { csrfFetch } from "./csrf";
-
 const SET_SPOTS = "spots/setSpots";
 const SET_USER_SPOTS = "spots/setUserSpots";
 const ADD_SPOT = "spots/addSpot";
 const REMOVE_SPOT = "spots/removeSpot";
 
+// Action Creators
 const setSpots = (spots) => ({
   type: SET_SPOTS,
   payload: spots,
@@ -25,12 +25,16 @@ const removeSpot = (spotId) => ({
   payload: spotId,
 });
 
-
 export const getSpots = () => async (dispatch) => {
   const response = await csrfFetch("/api/spots");
-  const data = await response.json();
-  dispatch(setSpots(data.Spots));
+
+  if (response.ok) {
+    const { Spots } = await response.json();
+    console.log("Spots:xxxxxxx", Spots);
+    dispatch(setSpots(Spots)); // Ensure `setSpots` updates the store with the Owner details
+  }
 };
+
 
 export const getUserSpots = () => async (dispatch) => {
   const response = await csrfFetch("/api/spots/current");
@@ -39,12 +43,10 @@ export const getUserSpots = () => async (dispatch) => {
 };
 
 export const createSpot = (spotData) => async (dispatch) => {
- const response = await csrfFetch("/api/spots", {
+  const response = await csrfFetch("/api/spots", {
     method: "POST",
-
     body: JSON.stringify(spotData),
   });
-
 
   const data = await response.json();
 
@@ -64,7 +66,7 @@ export const updateSpot = (spotData) => async (dispatch) => {
 
   const data = await response.json();
   if (response.ok) {
-    dispatch(addSpot(data)); // Update the spot in the store
+    dispatch(addSpot(data));
     return data;
   } else {
     return { errors: data.errors };
@@ -79,24 +81,45 @@ export const deleteSpot = (spotId) => async (dispatch) => {
   }
 };
 
+// Initial State
+const initialState = {
+  byId: {}, // Object containing spots keyed by ID
+  allIds: [], // Array of all spot IDs for easy iteration
+};
 
-const initialState = [];
-
-
+// Reducer
 export default function spotsReducer(state = initialState, action) {
   switch (action.type) {
-    case SET_SPOTS:
-      return [...action.payload];
-
-    case SET_USER_SPOTS:
-      return [...action.payload];
-
-    case ADD_SPOT:
-      return [...state, action.payload];
-
-    case REMOVE_SPOT:
-      return state.filter((spot) => spot.id !== action.payload);
-
+    case SET_SPOTS: {
+      const spotsById = {};
+      const spotIds = [];
+      action.payload.forEach((spot) => {
+        spotsById[spot.id] = spot;
+        spotIds.push(spot.id);
+      });
+      return { allIds: spotIds, byId: spotsById };
+    }
+    case SET_USER_SPOTS: {
+      const userSpotsById = {};
+      action.payload.forEach((spot) => {
+        userSpotsById[spot.id] = spot;
+      });
+      return { ...state, byId: { ...state.byId, ...userSpotsById } };
+    }
+    case ADD_SPOT: {
+      const newSpot = action.payload;
+      return {
+        ...state,
+        byId: { ...state.byId, [newSpot.id]: newSpot },
+        allIds: [...state.allIds, newSpot.id],
+      };
+    }
+    case REMOVE_SPOT: {
+      const newState = { ...state };
+      delete newState.byId[action.payload];
+      newState.allIds = newState.allIds.filter((id) => id !== action.payload);
+      return newState;
+    }
     default:
       return state;
   }

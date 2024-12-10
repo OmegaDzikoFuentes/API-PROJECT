@@ -196,12 +196,12 @@ const validateSpot = [
 
 // POST /api/spots - Create a new spot
 router.post('/', requireAuth, validateSpot, async (req, res, next) => {
-  
+
   const { address, city, state, country, lat, lng, name, description, price } = req.body;
   const ownerId = req.user.id; // Use the authenticated user's id
 
   try {
-    const spot = await Spot.create({
+    const newSpot = await Spot.create({
       ownerId,
       address,
       city,
@@ -214,7 +214,17 @@ router.post('/', requireAuth, validateSpot, async (req, res, next) => {
       price
     });
 
-    return res.status(201).json(spot); //added return word
+     // Fetch the created spot with associated User (owner) details
+     const spotWithOwner = await Spot.findByPk(newSpot.id, {
+      include: {
+        model: User,
+        attributes: ['id', 'firstName', 'lastName'], // Include the owner's first and last name
+      },
+    });
+
+  
+
+    return res.status(201).json(spotWithOwner);
   } catch (err) {
     next(err);
   }
@@ -277,7 +287,7 @@ router.get('/current', requireAuth, async (req, res, next) => {
 });
 
 
-// GET /api/spots/:spotId/bookings - Returns all bookings for a specified spot
+// GET /api/spots/:spotId
 router.get('/:spotId', async (req, res, next) => {
   const { spotId } = req.params;
 
@@ -433,8 +443,18 @@ router.post('/:spotId/reviews', requireAuth, validateReview, async (req, res, ne
     // Create the new review
     const newReview = await Review.create({ userId: user.id, spotId, review, stars });
 
-    // Return the created review
-    return res.status(201).json(newReview);
+    // Fetch the review with User data
+    const createdReview = await Review.findByPk(newReview.id, {
+      include: [
+        {
+          model: User,
+          attributes: ['firstName', 'lastName'], // Include user data
+        },
+      ],
+    });
+
+    // Return the created review with User data
+    return res.status(201).json(createdReview);
   } catch (err) {
     next(err);
   }

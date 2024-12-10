@@ -2,17 +2,33 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { getSpots } from "../../store/spots";
+import { getReviews } from "../../store/reviews";
+import OpenModalButton from "../OpenModalButton/OpenModalButton";
+import ReviewModal from "../ReviewModal/ReviewModal";
 import "./SpotDetails.css";
 
 function SpotDetails() {
   const { spotId } = useParams();
   const dispatch = useDispatch();
-  const spot = useSelector((state) => state.spots.find((s) => s.id === +spotId));
-  const user = useSelector((state) => state.session.user); // Check if user is logged in
 
-  useEffect(() => {
-    dispatch(getSpots());
-  }, [dispatch, spotId]);
+  const numericSpotId = Number(spotId);
+
+  const spot = useSelector((state) => state.spots.byId[numericSpotId]);
+  const reviews = useSelector((state) =>
+    state.reviews[numericSpotId] ? state.reviews[numericSpotId] : []
+  );
+  const user = useSelector((state) => state.session.user);
+
+  const reviewsCount = reviews.length;
+  const averageRating =
+    reviewsCount > 0
+      ? (reviews.reduce((sum, review) => sum + review.stars, 0) / reviewsCount).toFixed(1)
+      : null;
+
+      useEffect(() => {
+        dispatch(getSpots());
+        dispatch(getReviews(numericSpotId));
+      }, [dispatch, numericSpotId]);
 
   if (!spot) return <p>Loading...</p>;
 
@@ -20,6 +36,11 @@ function SpotDetails() {
     alert("Feature coming soon");
   };
 
+  const defaultImage =
+    "https://farm4.staticflickr.com/3852/14447103450_2d0ff8802b_z_d.jpg";
+
+
+console.log("Spot Details:xxxxxxxxx", spot);
   return (
     <div className="spot-details-container">
       <h4>{spot.name}</h4>
@@ -27,40 +48,64 @@ function SpotDetails() {
 
       <div className="images-container">
         <img
-          src={spot.previewImage || "https://farm4.staticflickr.com/3852/14447103450_2d0ff8802b_z_d.jpg"}
+          src={spot.previewImage || defaultImage}
           alt={spot.name}
           className="main-image"
         />
         <div className="small-images">
           {[spot.image1, spot.image2, spot.image3, spot.image4].map((img, idx) => (
-            <img key={idx} src={img || "https://farm9.staticflickr.com/8295/8007075227_dc958c1fe6_z_d.jpg"} alt={`Spot ${idx + 1}`} />
+            <img key={idx} src={img || defaultImage} alt={`Spot ${idx + 1}`} />
           ))}
         </div>
       </div>
 
       <div className="details-content">
         <div>
-          <p className="hosted-by">{`Hosted by ${spot.owner}`}</p>
+          <p className="hosted-by">{`Hosted by ${spot.Owner}`}</p>
           <p>{spot.description}</p>
           <div className="reviews-section">
-            <h3>{spot.averageRating ? `⭐ ${spot.averageRating} · ${spot.reviewsCount} reviews` : "New"}</h3>
-            {user && <button className="post-review-button">Post Your Review</button>}
+            <h3>
+              {averageRating
+                ? `⭐ ${averageRating} · ${reviewsCount} reviews`
+                : "New"}
+            </h3>
+            {user && (
+              <OpenModalButton
+                modalComponent={<ReviewModal spotId={spotId} />}
+                buttonText="Post Your Review"
+              />
+            )}
+            <ul className="reviews-list">
+  {reviews.map((review) => (
+    <ul key={review.id} className="review-item">
+      <div className="review-header">
+        <p className="review-user-name">{review.User.firstName}</p>
+        <p className="review-date">
+          {new Date(review.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'long' })}
+        </p>
+      </div>
+      <p className="review-text">{review.review}</p>
+      <p className="review-rating">Rating: {review.stars}⭐</p>
+    </ul>
+  ))}
+</ul>
+
           </div>
         </div>
         <div className="reserve-box">
-    <div className="reserve-box-content">
-          <p className="price">{`$${spot.price} / night`}</p>
-  <div className="rating-info">
-  <span>{`⭐ ${spot.averageRating || 'New'}`}</span>
-      {spot.reviewsCount !== undefined && (
-        <span>· {`${spot.reviewsCount} reviews`}</span>
-      )}
-  </div>
-  </div>
-  <button onClick={handleReserveClick}>Reserve</button>
-</div>
-</div>
-</div>
+          <div className="reserve-box-content">
+            <p className="price">{`$${spot.price} / night`}</p>
+            <div className="rating-info">
+              <span>{`⭐ ${averageRating || "New"}`}</span>
+              {reviewsCount !== undefined && (
+                <span>· {`${reviewsCount} reviews`}</span>
+              )}
+            </div>
+          </div>
+          <button onClick={handleReserveClick}>Reserve</button>
+        </div>
+      </div>
+    </div>
   );
 }
 
