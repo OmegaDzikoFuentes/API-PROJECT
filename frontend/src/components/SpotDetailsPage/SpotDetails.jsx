@@ -40,7 +40,7 @@ function SpotDetails() {
     "https://farm4.staticflickr.com/3852/14447103450_2d0ff8802b_z_d.jpg";
 
 
-console.log("Spot Details:xxxxxxxxx", spot);
+
   return (
     <div className="spot-details-container">
       <h4>{spot.name}</h4>

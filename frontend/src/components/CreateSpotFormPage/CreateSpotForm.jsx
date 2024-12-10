@@ -69,7 +69,7 @@ function CreateSpotForm() {
       lat: formData.lat, // lat is required
       lng: formData.lng, // lng is required
     };
-     
+
     const response = await dispatch(createSpot(formDataWithCoordinates));
     if (response.errors) {
       setErrors(response.errors);
@@ -97,7 +97,7 @@ function CreateSpotForm() {
             value={formData[field]}
             onChange={handleChange}
             placeholder={field}
-            required
+
           />
           {errors[field] && <p className="error">{errors[field]}</p>}
         </label>
@@ -113,7 +113,7 @@ function CreateSpotForm() {
           value={formData.lat}
           onChange={handleChange}
           placeholder="Latitude"
-          required
+
         />
         {errors.lat && <p className="error">{errors.lat}</p>}
       </label>
@@ -127,7 +127,7 @@ function CreateSpotForm() {
           value={formData.lng}
           onChange={handleChange}
           placeholder="Longitude"
-          required
+
         />
         {errors.lng && <p className="error">{errors.lng}</p>}
       </label>
@@ -140,7 +140,7 @@ function CreateSpotForm() {
         value={formData.description}
         onChange={handleChange}
         placeholder="Please write at least 30 characters"
-        required
+
       />
       {errors.description && <p className="error">{errors.description}</p>}
 
@@ -154,7 +154,7 @@ function CreateSpotForm() {
           value={formData.name}
           onChange={handleChange}
           placeholder="Name of your spot"
-          required
+
         />
         {errors.name && <p className="error">{errors.name}</p>}
       </label>
@@ -170,7 +170,7 @@ function CreateSpotForm() {
           value={formData.price}
           onChange={handleChange}
           placeholder="Price per night (USD)"
-          required
+          
         />
         {errors.price && <p className="error">{errors.price}</p>}
       </label>
@@ -185,7 +185,7 @@ function CreateSpotForm() {
           value={formData.previewImageUrl}
           onChange={handleChange}
           placeholder="Preview Image URL"
-          required
+
         />
         {errors.previewImageUrl && <p className="error">{errors.previewImageUrl}</p>}
       </label>
