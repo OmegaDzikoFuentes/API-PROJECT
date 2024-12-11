@@ -30,7 +30,7 @@ function ReviewModal({ spotId }) {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form className="review-modal" onSubmit={handleSubmit}>
       <h2>How was your stay?</h2>
       {errors.server && <p className="error">{errors.server}</p>}
       <textarea
@@ -39,7 +39,7 @@ function ReviewModal({ spotId }) {
         onChange={(e) => setReview(e.target.value)}
         required
       />
-      {errors.review && <p className="error">{errors.review}</p>} 
+      {errors.review && <p className="error">{errors.review}</p>}
 
       {/* Star Rating Component */}
       <div className="star-rating">
@@ -47,26 +47,13 @@ function ReviewModal({ spotId }) {
           <span
             key={star}
             className={star <= stars ? "star selected" : "star"}
-            onClick={() => setStars(star)}
+            onClick={() => setStars(Number(star))}
           >
             ★
           </span>
         ))}
       </div>
       {stars === 0 && <p className="error">Please select a star rating.</p>}
-
-      {/* Numeric Star Input */}
-      <label>
-        Stars
-        <input
-          type="number"
-          min="1"
-          max="5"
-          value={stars}
-          onChange={(e) => setStars(Number(e.target.value))}
-          required
-        />
-      </label>
 
       <button type="submit" disabled={review.length < 10 || stars === 0}>
         Submit Your Review

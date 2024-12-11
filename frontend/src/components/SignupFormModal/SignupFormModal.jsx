@@ -8,7 +8,7 @@ function SignupFormModal() {
   const dispatch = useDispatch();
   const { closeModal } = useModal();
 
-  // State for form inputs
+
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
   const [firstName, setFirstName] = useState("");
@@ -16,13 +16,13 @@ function SignupFormModal() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
-  // State for errors
+
   const [errors, setErrors] = useState({});
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Check if passwords match
+
     if (password !== confirmPassword) {
       setErrors({
         confirmPassword: "Confirm Password field must match the Password field",
@@ -41,7 +41,7 @@ function SignupFormModal() {
           password,
         })
       );
-      closeModal(); // Close the modal on success
+      closeModal();
     } catch (res) {
       const data = await res.json();
       if (data?.errors) setErrors(data.errors);
@@ -50,8 +50,8 @@ function SignupFormModal() {
 
   return (
     <>
-      <h1>Sign Up</h1>
-      <form onSubmit={handleSubmit}>
+      <h1 className="signup-label">Sign Up</h1>
+      <form className="signup-form" onSubmit={handleSubmit}>
         <label>
           Email
           <input
@@ -113,7 +113,7 @@ function SignupFormModal() {
             type="password"
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
-            
+
           />
         </label>
         {errors.confirmPassword && <p className="error">{errors.confirmPassword}</p>}

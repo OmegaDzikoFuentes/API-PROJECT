@@ -25,6 +25,12 @@ function SpotDetails() {
       ? (reviews.reduce((sum, review) => sum + review.stars, 0) / reviewsCount).toFixed(1)
       : null;
 
+       // Determine if the user is the owner
+  const isOwner = user && spot?.ownerId === user.id;
+
+  // Determine if the user has already reviewed the spot
+  const hasReviewed = reviews.some((review) => review.userId === user?.id);
+
       useEffect(() => {
         dispatch(getSpots());
         dispatch(getReviews(numericSpotId));
@@ -43,7 +49,7 @@ function SpotDetails() {
 
   return (
     <div className="spot-details-container">
-      <h4>{spot.name}</h4>
+      <h4 className="spot-name-label">{spot.name}</h4>
       <p className="location">{`${spot.city}, ${spot.state}, ${spot.country}`}</p>
 
       <div className="images-container">
@@ -69,8 +75,9 @@ function SpotDetails() {
                 ? `⭐ ${averageRating} · ${reviewsCount} reviews`
                 : "New"}
             </h3>
-            {user && (
+            {user && !isOwner && !hasReviewed && (
               <OpenModalButton
+                className="review-button"
                 modalComponent={<ReviewModal spotId={spotId} />}
                 buttonText="Post Your Review"
               />
@@ -102,7 +109,7 @@ function SpotDetails() {
               )}
             </div>
           </div>
-          <button onClick={handleReserveClick}>Reserve</button>
+          <button className="reserve-button" onClick={handleReserveClick}>Reserve</button>
         </div>
       </div>
     </div>

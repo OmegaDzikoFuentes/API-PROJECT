@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { createSpot } from "../../store/spots";
+import "./CreateSpotForm.css";
 
 function CreateSpotForm() {
   const dispatch = useDispatch();
@@ -170,7 +171,7 @@ function CreateSpotForm() {
           value={formData.price}
           onChange={handleChange}
           placeholder="Price per night (USD)"
-          
+
         />
         {errors.price && <p className="error">{errors.price}</p>}
       </label>

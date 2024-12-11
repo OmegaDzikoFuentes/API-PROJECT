@@ -72,12 +72,12 @@ function UpdateSpotForm() {
   if (!spot) return <p>Loading...</p>;
 
   return (
-    <form onSubmit={handleSubmit}>
-      <h1>Update your Spot</h1>
+    <form className="update-spot-form" onSubmit={handleSubmit}>
+      <h1 className="update-spot-label">Update your Spot</h1>
 
       {/* Location Section */}
-      <h2>Where&#39;s your place located?</h2>
-      <p>Guests will only get your exact address once they book a reservation.</p>
+      <h2 className="location-question-label">Where&#39;s your place located?</h2>
+      <p className="address-label">Guests will only get your exact address once they book a reservation.</p>
       {["country", "address", "city", "state"].map((field) => (
         <label key={field}>
           {field.charAt(0).toUpperCase() + field.slice(1)}
@@ -174,7 +174,7 @@ function UpdateSpotForm() {
           value={formData.previewImageUrl}
           onChange={handleChange}
           placeholder="Preview Image URL"
-          
+
         />
         {errors.previewImageUrl && <p className="error">{errors.previewImageUrl}</p>}
       </label>
@@ -192,7 +192,7 @@ function UpdateSpotForm() {
         </label>
       ))}
 
-      <button type="submit">Update your Spot</button>
+      <button className="update-button" type="submit">Update your Spot</button>
     </form>
   );
 }
