@@ -43,7 +43,7 @@ function SpotDetails() {
   };
 
   const defaultImage =
-    "https://farm4.staticflickr.com/3852/14447103450_2d0ff8802b_z_d.jpg";
+    "https://farm7.staticflickr.com/6089/6115759179_86316c08ff_z_d.jpg";
 
 
 
@@ -58,7 +58,7 @@ function SpotDetails() {
           alt={spot.name}
           className="main-image"
         />
-        <div className="small-images">
+          <div className="small-images">
           {[spot.image1, spot.image2, spot.image3, spot.image4].map((img, idx) => (
             <img key={idx} src={img || defaultImage} alt={`Spot ${idx + 1}`} />
           ))}

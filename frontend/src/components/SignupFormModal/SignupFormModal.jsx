@@ -49,7 +49,7 @@ function SignupFormModal() {
   };
 
   return (
-    <>
+    <div className="signup-modal">
       <h1 className="signup-label">Sign Up</h1>
       <form className="signup-form" onSubmit={handleSubmit}>
         <label>
@@ -120,7 +120,7 @@ function SignupFormModal() {
 
         <button type="submit">Sign Up</button>
       </form>
-    </>
+    </div>
   );
 }
 

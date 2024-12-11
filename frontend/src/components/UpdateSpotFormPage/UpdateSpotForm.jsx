@@ -57,13 +57,27 @@ function UpdateSpotForm() {
       setErrors(validationErrors);
       return;
     }
-    const response = await dispatch(updateSpot({ ...formData, id: spotId }));
+
+    const updatedSpotData = {
+      ...formData,
+      price: Number(formData.price),
+      images: [
+        formData.previewImageUrl,
+        formData.image1,
+        formData.image2,
+        formData.image3,
+        formData.image4,
+      ].filter(Boolean), // Filter out empty fields
+    };
+
+    const response = await dispatch(updateSpot(updatedSpotData));
     if (response.errors) {
       setErrors(response.errors);
     } else {
       navigate(`/spots/${response.id}`);
     }
   };
+
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });

@@ -1,15 +1,18 @@
 .login-modal {
-  width: 400px;
+  width: 300px;
   display: flex;
   flex-direction: column; /* Stack children vertically */
   justify-content: center;
   align-items: center;
-  margin: 0 auto;
+  margin: 2px;
+  border-radius: 20px;
+  background-color: #1324
 
 }
 .login-form-label {
-  font-size: 14px;
+  font-size: 15px;
   color: #333;
+  justify-content: flex-start;
 
 }
 
@@ -18,10 +21,10 @@
   font-weight: 600;
   color: #333;
   text-align: left;
-  margin-bottom: 20px; /* Add space between the label and form */
 }
 
 .login-form {
-  width: 50%;
+  width: 80%;
   padding: 24px;
+  background-color: gainsboro;
 }
