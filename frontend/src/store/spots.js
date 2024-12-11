@@ -30,7 +30,7 @@ export const getSpots = () => async (dispatch) => {
 
   if (response.ok) {
     const { Spots } = await response.json();
-    console.log("Spots:xxxxxxx", Spots);
+    
     dispatch(setSpots(Spots)); // Ensure `setSpots` updates the store with the Owner details
   }
 };

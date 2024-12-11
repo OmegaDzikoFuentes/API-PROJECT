@@ -62,20 +62,23 @@ function CreateSpotForm() {
       setErrors(validationErrors);
       return;
     }
-
-    // Ensure price is a number and lat/lng are valid
-    const formDataWithCoordinates = {
+    const spotData = {
       ...formData,
-      price: Number(formData.price), // Convert price to a number
-      lat: formData.lat, // lat is required
-      lng: formData.lng, // lng is required
+      price: Number(formData.price),
+      images: [
+        formData.previewImageUrl,
+        formData.image1,
+        formData.image2,
+        formData.image3,
+        formData.image4,
+      ].filter(Boolean), // Remove empty values
     };
-
-    const response = await dispatch(createSpot(formDataWithCoordinates));
+console.log('spottttttttttoooooo', spotData);
+    const response = await dispatch(createSpot(spotData));
     if (response.errors) {
       setErrors(response.errors);
     } else {
-      navigate(`/spots/${response.id}`); // Redirect to the new spot's detail page
+      navigate(`/spots/${response.id}`);
     }
   };
 

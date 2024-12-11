@@ -197,10 +197,11 @@ const validateSpot = [
 // POST /api/spots - Create a new spot
 router.post('/', requireAuth, validateSpot, async (req, res, next) => {
 
-  const { address, city, state, country, lat, lng, name, description, price } = req.body;
+  const { address, city, state, country, lat, lng, name, description, price, images } = req.body;
   const ownerId = req.user.id; // Use the authenticated user's id
 
   try {
+    // Create the new spot
     const newSpot = await Spot.create({
       ownerId,
       address,
@@ -214,17 +215,35 @@ router.post('/', requireAuth, validateSpot, async (req, res, next) => {
       price
     });
 
-     // Fetch the created spot with associated User (owner) details
-     const spotWithOwner = await Spot.findByPk(newSpot.id, {
-      include: {
-        model: User,
-        attributes: ['id', 'firstName', 'lastName'], // Include the owner's first and last name
-      },
+    // Associate images with the spot
+    if (images && Array.isArray(images)) {
+      await Promise.all(
+        images.map((url, index) => {
+          const isPreview = index === 0; // First image is the preview image
+          return SpotImage.create({
+            spotId: newSpot.id, // Associate with the created spot
+            url,
+            preview: isPreview,
+          });
+        })
+      );
+    }
+
+    // Fetch the created spot with associated images
+    const spotWithDetails = await Spot.findByPk(newSpot.id, {
+      include: [
+        {
+          model: User,
+          attributes: ['id', 'firstName', 'lastName'], // Include owner details
+        },
+        {
+          model: SpotImage,
+          attributes: ['id', 'url', 'preview'], // Include associated images
+        },
+      ],
     });
 
-  
-
-    return res.status(201).json(spotWithOwner);
+    return res.status(201).json(spotWithDetails);
   } catch (err) {
     next(err);
   }
