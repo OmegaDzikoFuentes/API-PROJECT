@@ -194,7 +194,7 @@ function UpdateSpotForm() {
       </label>
 
       {/* Additional Image URLs */}
-      {[...Array(4)].map((_, index) => (
+      {[formData.image1,formData.image2,formData.image3,formData.image4].map((_, index) => (
         <label key={`image${index + 1}`}>
           Image URL
           <input

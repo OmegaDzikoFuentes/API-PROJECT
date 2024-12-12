@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
-import { getSpots } from "../../store/spots";
+import { getSpots, getSpotById } from "../../store/spots";
 import { getReviews } from "../../store/reviews";
 import OpenModalButton from "../OpenModalButton/OpenModalButton";
 import ReviewModal from "../ReviewModal/ReviewModal";
@@ -35,6 +35,18 @@ function SpotDetails() {
         dispatch(getSpots());
         dispatch(getReviews(numericSpotId));
       }, [dispatch, numericSpotId]);
+
+      useEffect(() => {
+        if (!spot) {
+          dispatch(getSpotById(numericSpotId)); // Fetch specific spot if not in store
+        } else {
+          dispatch(getReviews(numericSpotId)); // Fetch reviews if spot is already available
+        }
+      }, [dispatch, numericSpotId, spot]);
+
+
+
+console.log('why is this loooking wonky', spot);
 
   if (!spot) return <p>Loading...</p>;
 

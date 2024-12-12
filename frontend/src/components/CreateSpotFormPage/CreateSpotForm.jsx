@@ -74,6 +74,7 @@ function CreateSpotForm() {
       ].filter(Boolean), // Remove empty values
     };
 console.log('spottttttttttoooooo', spotData);
+
     const response = await dispatch(createSpot(spotData));
     if (response.errors) {
       setErrors(response.errors);

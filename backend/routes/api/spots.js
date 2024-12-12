@@ -375,7 +375,7 @@ router.get('/:spotId', async (req, res, next) => {
         lastName: spot.User.lastName,
       },
     }
-
+console.log("im sending this spot bbbaaacckkkeeeennddd",formattedSpot);
     // response
     return res.json(formattedSpot); //added return word
   } catch (err) {

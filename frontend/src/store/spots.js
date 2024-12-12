@@ -30,7 +30,7 @@ export const getSpots = () => async (dispatch) => {
 
   if (response.ok) {
     const { Spots } = await response.json();
-    
+
     dispatch(setSpots(Spots)); // Ensure `setSpots` updates the store with the Owner details
   }
 };
@@ -39,7 +39,18 @@ export const getSpots = () => async (dispatch) => {
 export const getUserSpots = () => async (dispatch) => {
   const response = await csrfFetch("/api/spots/current");
   const data = await response.json();
+
   dispatch(setUserSpots(data.Spots));
+};
+
+export const getSpotById = (spotId) => async (dispatch) => {
+  const response = await csrfFetch(`/api/spots/${spotId}`);
+  const data = await response.json();
+
+  if (response.ok) {
+    dispatch(addSpot(data)); // Add the fetched spot to the Redux store
+    return data;
+  }
 };
 
 export const createSpot = (spotData) => async (dispatch) => {
