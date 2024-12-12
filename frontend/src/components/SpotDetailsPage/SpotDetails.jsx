@@ -87,6 +87,7 @@ console.log('why is this loooking wonky', spot);
                 ? `⭐ ${averageRating} · ${reviewsCount} reviews`
                 : "New"}
             </h3>
+            <div className="review-button">
             {user && !isOwner && !hasReviewed && (
               <OpenModalButton
                 className="review-button"
@@ -94,6 +95,7 @@ console.log('why is this loooking wonky', spot);
                 buttonText="Post Your Review"
               />
             )}
+            </div>
             <ul className="reviews-list">
   {reviews.map((review) => (
     <ul key={review.id} className="review-item">
