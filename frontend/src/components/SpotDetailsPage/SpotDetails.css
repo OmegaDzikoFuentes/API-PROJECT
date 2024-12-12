@@ -139,12 +139,9 @@
   background-color: #ff5a5f;
   color: white;
   border: none;
-  margin: 2px;
+  margin: 12px 0px 0px;
   cursor: pointer;
   width: 20%;
-  height: 3px;
-  margin-bottom: 20px;
-  padding-bottom: 20px;
 }
 
 .reserve-button {

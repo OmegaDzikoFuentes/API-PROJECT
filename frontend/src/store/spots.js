@@ -1,8 +1,10 @@
 import { csrfFetch } from "./csrf";
+
 const SET_SPOTS = "spots/setSpots";
 const SET_USER_SPOTS = "spots/setUserSpots";
 const ADD_SPOT = "spots/addSpot";
 const REMOVE_SPOT = "spots/removeSpot";
+const ADD_SPOT_IMAGE = "spots/addSpotImage";
 
 // Action Creators
 const setSpots = (spots) => ({
@@ -25,31 +27,50 @@ const removeSpot = (spotId) => ({
   payload: spotId,
 });
 
+const addImage = (image, spotId) => ({
+  type: ADD_SPOT_IMAGE,
+  payload: { image, spotId },
+});
+
+// Thunks
 export const getSpots = () => async (dispatch) => {
   const response = await csrfFetch("/api/spots");
 
   if (response.ok) {
     const { Spots } = await response.json();
-
-    dispatch(setSpots(Spots)); // Ensure `setSpots` updates the store with the Owner details
+    dispatch(setSpots(Spots));
   }
 };
 
-
 export const getUserSpots = () => async (dispatch) => {
   const response = await csrfFetch("/api/spots/current");
-  const data = await response.json();
 
-  dispatch(setUserSpots(data.Spots));
+  if (response.ok) {
+    const { Spots } = await response.json();
+    dispatch(setUserSpots(Spots));
+  }
 };
 
 export const getSpotById = (spotId) => async (dispatch) => {
   const response = await csrfFetch(`/api/spots/${spotId}`);
-  const data = await response.json();
 
   if (response.ok) {
-    dispatch(addSpot(data)); // Add the fetched spot to the Redux store
-    return data;
+    const spot = await response.json();
+    dispatch(addSpot(spot));
+    return spot;
+  }
+};
+
+export const addSpotImage = (imageData, spotId) => async (dispatch) => {
+  const response = await csrfFetch(`/api/spots/${spotId}/images`, {
+    method: "POST",
+    body: JSON.stringify(imageData),
+  });
+
+  if (response.ok) {
+    const image = await response.json();
+    dispatch(addImage(image, spotId));
+    return image;
   }
 };
 
@@ -69,23 +90,50 @@ export const createSpot = (spotData) => async (dispatch) => {
   }
 };
 
-export const updateSpot = (spotData) => async (dispatch) => {
-  const response = await csrfFetch(`/api/spots/${spotData.id}`, {
+export const updateSpot = (spotData) => async (dispatch, getState) => {
+  const { id, images, ...restData } = spotData;
+
+  const response = await csrfFetch(`/api/spots/${id}`, {
     method: "PUT",
-    body: JSON.stringify(spotData),
+    body: JSON.stringify(restData),
   });
 
-  const data = await response.json();
   if (response.ok) {
-    dispatch(addSpot(data));
-    return data;
+    const updatedSpot = await response.json();
+
+    // Remove old images
+    const currentSpot = getState().spots.byId[id];
+    if (currentSpot?.SpotImages?.length > 0) {
+      await Promise.all(
+        currentSpot.SpotImages.map((image) =>
+          csrfFetch(`/api/spot-images/${image.id}`, { method: "DELETE" })
+        )
+      );
+    }
+
+    // Add new images
+    if (images?.length > 0) {
+      await Promise.all(
+        images.map((url, index) =>
+          dispatch(
+            addSpotImage({ url, preview: index === 0 }, updatedSpot.id)
+          )
+        )
+      );
+    }
+
+    dispatch(addSpot(updatedSpot));
+    return updatedSpot;
   } else {
-    return { errors: data.errors };
+    const errors = await response.json();
+    return { errors: errors.errors };
   }
 };
 
 export const deleteSpot = (spotId) => async (dispatch) => {
-  const response = await csrfFetch(`/api/spots/${spotId}`, { method: "DELETE" });
+  const response = await csrfFetch(`/api/spots/${spotId}`, {
+    method: "DELETE",
+  });
 
   if (response.ok) {
     dispatch(removeSpot(spotId));
@@ -130,6 +178,17 @@ export default function spotsReducer(state = initialState, action) {
       delete newState.byId[action.payload];
       newState.allIds = newState.allIds.filter((id) => id !== action.payload);
       return newState;
+    }
+    case ADD_SPOT_IMAGE: {
+      const { image, spotId } = action.payload;
+      const updatedSpot = {
+        ...state.byId[spotId],
+        SpotImages: [...(state.byId[spotId]?.SpotImages || []), image],
+      };
+      return {
+        ...state,
+        byId: { ...state.byId, [spotId]: updatedSpot },
+      };
     }
     default:
       return state;
