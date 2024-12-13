@@ -35,7 +35,7 @@ function SpotsList() {
   <div className="spot-details">
     <span>{`${spot.city}, ${spot.state}`}</span>
     <span className="spot-rating">
-      {spot.averageRating ? `⭐ ${spot.averageRating.toFixed(1)}` : "New"}
+      {spot.averageRating !== undefined ? `⭐ ${spot.averageRating.toFixed(1)}` : "New"}
     </span>
   </div>
   <p>{`$${spot.price} / night`}</p>

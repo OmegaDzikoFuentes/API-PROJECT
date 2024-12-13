@@ -23,6 +23,19 @@ function LoginFormModal() {
     }
   };
 
+  const handleDemoUser = async () => {
+    try {
+      await dispatch(sessionActions.login({
+        credential: "demo@user.io",
+        password: "password",
+      }));
+      closeModal();
+    } catch (res) {
+      const data = await res.json();
+      if (data && data.errors) setErrors(data.errors);
+    }
+  };
+
   return (
     <div className="login-modal">
       <h1 className="login-label">Log In</h1>
@@ -48,6 +61,9 @@ function LoginFormModal() {
         {errors.credential && <p>{errors.credential}</p>}
         <button className="login-button" type="submit">Log In</button>
       </form>
+      <button className="demo-user-button" onClick={handleDemoUser}>
+        Log In as Demo User
+      </button>
       </div>
   );
 }

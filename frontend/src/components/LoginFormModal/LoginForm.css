@@ -28,3 +28,8 @@
   padding: 24px;
   background-color: gainsboro;
 }
+
+.demo-user-button {
+  width: 45%;
+  margin: 30px;
+}
