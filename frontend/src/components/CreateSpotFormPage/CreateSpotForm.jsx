@@ -62,26 +62,25 @@ function CreateSpotForm() {
       setErrors(validationErrors);
       return;
     }
-    const spotData = {
-      ...formData,
-      price: Number(formData.price),
-      images: [
-        formData.previewImageUrl,
-        formData.image1,
-        formData.image2,
-        formData.image3,
-        formData.image4,
-      ].filter(Boolean), // Remove empty values
-    };
-console.log('spottttttttttoooooo', spotData);
 
-    const response = await dispatch(createSpot(spotData));
+    const spotData = { ...formData, price: Number(formData.price) };
+    const imageUrls = [
+      formData.previewImageUrl,
+      formData.image1,
+      formData.image2,
+      formData.image3,
+      formData.image4,
+    ].filter(Boolean); // Remove empty URLs
+
+    const response = await dispatch(createSpot(spotData, imageUrls));
+
     if (response.errors) {
       setErrors(response.errors);
     } else {
       navigate(`/spots/${response.id}`);
     }
   };
+
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });

@@ -27,14 +27,14 @@
   object-fit: cover;
 }
 
-.small-images {
+.small-images-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 10px;
   width: 50%;
 }
 
-.small-images img {
+.small-images-grid img {
   width: 100%;
   height: 205px;
   object-fit: cover;

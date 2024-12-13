@@ -3,6 +3,7 @@ import { csrfFetch } from "./csrf";
 const SET_SPOTS = "spots/setSpots";
 const SET_USER_SPOTS = "spots/setUserSpots";
 const ADD_SPOT = "spots/addSpot";
+const UPDATE_SPOT = "spots/updateSpot";
 const REMOVE_SPOT = "spots/removeSpot";
 const ADD_SPOT_IMAGE = "spots/addSpotImage";
 
@@ -20,6 +21,11 @@ const setUserSpots = (spots) => ({
 const addSpot = (spot) => ({
   type: ADD_SPOT,
   payload: spot,
+});
+
+const update = (spot) => ({
+  type: UPDATE_SPOT,
+  payload: spot
 });
 
 const removeSpot = (spotId) => ({
@@ -56,6 +62,7 @@ export const getSpotById = (spotId) => async (dispatch) => {
 
   if (response.ok) {
     const spot = await response.json();
+
     dispatch(addSpot(spot));
     return spot;
   }
@@ -64,7 +71,10 @@ export const getSpotById = (spotId) => async (dispatch) => {
 export const addSpotImage = (imageData, spotId) => async (dispatch) => {
   const response = await csrfFetch(`/api/spots/${spotId}/images`, {
     method: "POST",
-    body: JSON.stringify(imageData),
+    body: JSON.stringify({
+      url: imageData.url,
+      preview: imageData.preview
+  }),
   });
 
   if (response.ok) {
@@ -74,21 +84,46 @@ export const addSpotImage = (imageData, spotId) => async (dispatch) => {
   }
 };
 
-export const createSpot = (spotData) => async (dispatch) => {
+export const createSpot = (spotData, imageUrls) => async (dispatch) => {
   const response = await csrfFetch("/api/spots", {
     method: "POST",
     body: JSON.stringify(spotData),
   });
 
-  const data = await response.json();
-
   if (response.ok) {
-    dispatch(addSpot(data));
-    return data;
+    const newSpot = await response.json(); // The new spot is returned here
+
+    // Ensure SpotImages is initialized as an empty array if not already
+    newSpot.SpotImages = newSpot.SpotImages || [];
+
+    // Add images to the SpotImages array of the new spot
+    if (imageUrls?.length > 0) {
+      await Promise.all(
+        imageUrls.map(async (url, index) => {
+          const imageResponse = await csrfFetch(`/api/spots/${newSpot.id}/images`, {
+            method: "POST",
+            body: JSON.stringify({ url, preview: index === 0 }),
+          });
+
+          if (imageResponse.ok) {
+            const image = await imageResponse.json();
+            newSpot.SpotImages.push(image); // Push each image into the SpotImages array
+          }
+        })
+      );
+    }
+
+console.log('this spot has the spot images array',newSpot); // Log the newSpot object
+
+    dispatch(addSpot(newSpot)); // Update Redux store with the new spot
+    return newSpot;
   } else {
-    return { errors: data.errors };
+    const errorData = await response.json();
+    return { errors: errorData.errors };
   }
 };
+
+
 
 export const updateSpot = (spotData) => async (dispatch, getState) => {
   const { id, images, ...restData } = spotData;
@@ -122,13 +157,14 @@ export const updateSpot = (spotData) => async (dispatch, getState) => {
       );
     }
 
-    dispatch(addSpot(updatedSpot));
+    dispatch(update(updatedSpot));
     return updatedSpot;
   } else {
     const errors = await response.json();
     return { errors: errors.errors };
   }
 };
+
 
 export const deleteSpot = (spotId) => async (dispatch) => {
   const response = await csrfFetch(`/api/spots/${spotId}`, {

@@ -197,7 +197,7 @@ const validateSpot = [
 // POST /api/spots - Create a new spot
 router.post('/', requireAuth, validateSpot, async (req, res, next) => {
 
-  const { address, city, state, country, lat, lng, name, description, price, images } = req.body;
+  const { address, city, state, country, lat, lng, name, description, price } = req.body;
   const ownerId = req.user.id; // Use the authenticated user's id
 
   try {
@@ -215,35 +215,8 @@ router.post('/', requireAuth, validateSpot, async (req, res, next) => {
       price
     });
 
-    // Associate images with the spot
-    if (images && Array.isArray(images)) {
-      await Promise.all(
-        images.map((url, index) => {
-          const isPreview = index === 0; // First image is the preview image
-          return SpotImage.create({
-            spotId: newSpot.id, // Associate with the created spot
-            url,
-            preview: isPreview,
-          });
-        })
-      );
-    }
 
-    // Fetch the created spot with associated images
-    const spotWithDetails = await Spot.findByPk(newSpot.id, {
-      include: [
-        {
-          model: User,
-          attributes: ['id', 'firstName', 'lastName'], // Include owner details
-        },
-        {
-          model: SpotImage,
-          attributes: ['id', 'url', 'preview'], // Include associated images
-        },
-      ],
-    });
-
-    return res.status(201).json(spotWithDetails);
+    return res.status(201).json(newSpot);
   } catch (err) {
     next(err);
   }
@@ -322,8 +295,6 @@ router.get('/:spotId', async (req, res, next) => {
         {
           model: SpotImage,
           attributes: ['id', 'url', 'preview'],
-          where: { preview: true },
-          required: false
         },
         {
           model: Review,
@@ -375,7 +346,7 @@ router.get('/:spotId', async (req, res, next) => {
         lastName: spot.User.lastName,
       },
     }
-console.log("im sending this spot bbbaaacckkkeeeennddd",formattedSpot);
+
     // response
     return res.json(formattedSpot); //added return word
   } catch (err) {

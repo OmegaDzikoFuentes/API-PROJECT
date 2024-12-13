@@ -58,25 +58,24 @@ function UpdateSpotForm() {
       return;
     }
 
-    const updatedSpotData = {
-      ...formData,
-      price: Number(formData.price),
-      images: [
-        formData.previewImageUrl,
-        formData.image1,
-        formData.image2,
-        formData.image3,
-        formData.image4,
-      ].filter(Boolean), // Filter out empty fields
-    };
+    const updatedSpotData = { ...formData, price: Number(formData.price) };
+    const imageUrls = [
+      formData.previewImageUrl,
+      formData.image1,
+      formData.image2,
+      formData.image3,
+      formData.image4,
+    ].filter(Boolean); // Remove empty URLs
 
-    const response = await dispatch(updateSpot(updatedSpotData));
+    const response = await dispatch(updateSpot(updatedSpotData, imageUrls));
+
     if (response.errors) {
       setErrors(response.errors);
     } else {
       navigate(`/spots/${response.id}`);
     }
   };
+
 
 
   const handleChange = (e) => {
