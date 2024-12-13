@@ -113,7 +113,7 @@ export const createSpot = (spotData, imageUrls) => async (dispatch) => {
       );
     }
 
-console.log('this spot has the spot images array',newSpot); // Log the newSpot object
+
 
     dispatch(addSpot(newSpot)); // Update Redux store with the new spot
     return newSpot;

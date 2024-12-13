@@ -28,7 +28,7 @@ function SpotDetails() {
       ? (reviews.reduce((sum, review) => sum + review.stars, 0) / reviewsCount).toFixed(1)
       : null;
 
-
+      const isOwner = user && spot?.ownerId === user.id;
   const hasReviewed = reviews.some((review) => review.userId === user?.id);
 
   useEffect(() => {
@@ -94,7 +94,7 @@ function SpotDetails() {
                 : "New"}
             </h3>
             <div className="review-button">
-            {user && !hasReviewed && (
+            {user && !hasReviewed && !isOwner && (
               <OpenModalButton
                 modalComponent={<ReviewModal spotId={numericSpotId} />}
                 buttonText="Post Your Review"
