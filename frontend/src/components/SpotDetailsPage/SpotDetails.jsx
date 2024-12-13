@@ -5,6 +5,7 @@ import { getSpots, getSpotById } from "../../store/spots";
 import { getReviews, deleteReview } from "../../store/reviews";
 import OpenModalButton from "../OpenModalButton/OpenModalButton";
 import ReviewModal from "../ReviewModal/ReviewModal";
+import DeleteReviewModal from "../DeleteReviewModal/DeleteReviewModal";
 import "./SpotDetails.css";
 
 function SpotDetails() {
@@ -27,7 +28,7 @@ function SpotDetails() {
       ? (reviews.reduce((sum, review) => sum + review.stars, 0) / reviewsCount).toFixed(1)
       : null;
 
-  const isOwner = user && spot?.ownerId === user.id;
+
   const hasReviewed = reviews.some((review) => review.userId === user?.id);
 
   useEffect(() => {
@@ -42,10 +43,7 @@ function SpotDetails() {
     }
   }, [dispatch, numericSpotId, spot]);
 
-  const handleDeleteClick = (reviewId) => {
-    setReviewToDelete(reviewId);
-    setShowDeleteModal(true);
-  };
+
 
   const confirmDeleteReview = async () => {
     await dispatch(deleteReview(numericSpotId, reviewToDelete));
@@ -117,14 +115,12 @@ function SpotDetails() {
                   </div>
                   <p className="review-text">{review.review}</p>
                   <p className="review-rating">Rating: {review.stars}⭐</p>
-                  {isOwner && (
-                    <button
-                      className="delete-review-button"
-                      onClick={() => handleDeleteClick(review.id)}
-                    >
-                      Delete
-                    </button>
-                  )}
+                  {user?.id === review.userId && (
+              <OpenModalButton
+                modalComponent={<DeleteReviewModal reviewId={review.id} spotId={numericSpotId} />}
+                buttonText="Delete Review"
+              />
+            )}
                 </li>
               ))}
             </ul>

@@ -1,0 +1,34 @@
+/* Modal Styles */
+.confirm-delete-modal {
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    bottom: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.7);
+  }
+
+  .modal div {
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    max-width: 400px;
+    width: 100%;
+  }
+
+  button {
+    margin: 10px;
+  }
+
+  .confirm-delete {
+    background-color: red;
+    color: white;
+  }
+
+  .cancel-delete {
+    background-color: grey;
+    color: white;
+  }
