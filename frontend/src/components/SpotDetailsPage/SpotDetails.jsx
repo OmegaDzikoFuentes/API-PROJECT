@@ -106,7 +106,7 @@ function SpotDetails() {
           <div className="reviews-section">
             <h3>
               {averageRating
-                ? `⭐ ${averageRating} · ${reviewsCount} reviews`
+                ? `⭐ ${averageRating} · ${reviewsCount} ${reviewsCount === 1 ? "review" : "reviews"}`
                 : "New"}
             </h3>
             <div className="review-button">
