@@ -14,15 +14,16 @@
 
 .favicon {
   font-size: 32px;
-  color: #ff5a5f;
-  margin-right: 10px;
+  color:   #008080;
 }
 
 .nav-brand {
   font-size: 24px;
-  color: #ff5a5f;
+  color: #008080;
   text-decoration: none;
   font-weight: bold;
+  margin-left: 10px;
+  padding-top: 15px;
 }
 
 .nav-links {
@@ -61,7 +62,8 @@
   border: none;
   cursor: pointer;
   font-size: 24px;
-  background-color: #ff5a5f;
+  background-color: #008080;
+  height: 47px
 }
 
 .profile-dropdown {

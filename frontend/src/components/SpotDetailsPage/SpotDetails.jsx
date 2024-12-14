@@ -22,6 +22,8 @@ function SpotDetails() {
   );
   const user = useSelector((state) => state.session.user);
 
+ 
+
   const reviewsCount = reviews.length;
   const averageRating =
     reviewsCount > 0

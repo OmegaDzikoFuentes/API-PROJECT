@@ -1,5 +1,5 @@
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faAirbnb } from "@fortawesome/free-brands-svg-icons";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPlaceOfWorship } from '@fortawesome/free-solid-svg-icons';
 import { NavLink } from "react-router-dom";
 import { useSelector } from "react-redux";
 import ProfileButton from "./ProfileButton";
@@ -11,9 +11,9 @@ function Navigation({ isLoaded }) {
   return (
     <div className="navigation">
       <div className="logo">
-        <FontAwesomeIcon icon={faAirbnb} className="favicon" />
+      <FontAwesomeIcon icon={faPlaceOfWorship} size="2x" />
         <NavLink to="/" className="nav-brand">
-          AirBnB
+          StayCation
         </NavLink>
       </div>
       {isLoaded && (

@@ -59,9 +59,10 @@ export const getUserSpots = () => async (dispatch) => {
 
 export const getSpotById = (spotId) => async (dispatch) => {
   const response = await csrfFetch(`/api/spots/${spotId}`);
+  const spot = await response.json();
 
   if (response.ok) {
-    const spot = await response.json();
+    
 
     dispatch(addSpot(spot));
     return spot;
