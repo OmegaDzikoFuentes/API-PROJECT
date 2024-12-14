@@ -33,3 +33,42 @@
   width: 45%;
   margin: 30px;
 }
+
+.login-button {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  font-weight: bold;
+  color: white;
+  background-color: #008080; /* Green background */
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.login-button:hover {
+  background-color: #45a049; /* Darker green on hover */
+}
+
+.login-button:disabled {
+  background-color: #d3d3d3; /* Light gray background when disabled */
+  color: #a9a9a9; /* Gray text color when disabled */
+  cursor: not-allowed; /* Change cursor to not-allowed */
+}
+
+.demo-user-button {
+  width: 45%;
+  margin: 30px;
+  padding: 10px;
+  font-size: 14px;
+  color: white;
+  background-color: #014D4E;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.demo-user-button:hover {
+  background-color: #0056b3; /* Darker blue on hover */
+}
