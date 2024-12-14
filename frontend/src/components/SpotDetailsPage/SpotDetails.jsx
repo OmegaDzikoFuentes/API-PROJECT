@@ -104,43 +104,56 @@ function SpotDetails() {
           <p className="hosted-by">{`Hosted by ${spot.Owner?.firstName}`}</p>
           <p>{spot.description}</p>
           <div className="reviews-section">
-            <h3>
-              {averageRating
-                ? `⭐ ${averageRating} · ${reviewsCount} ${reviewsCount === 1 ? "review" : "reviews"}`
-                : "New"}
-            </h3>
-            <div className="review-button">
-            {user && !hasReviewed && !isOwner && (
-              <OpenModalButton
-                modalComponent={<ReviewModal spotId={numericSpotId} />}
-                buttonText="Post Your Review"
-              />
-            )}
-            </div>
-            <ul className="reviews-list">
-              {reviews.map((review) => (
-                <li key={review.id} className="review-item">
-                  <div className="review-header">
-                    <p className="review-user-name">{review.User?.firstName}</p>
-                    <p className="review-date">
-                      {new Date(review.createdAt).toLocaleDateString('en-US', {
-                        year: "numeric",
-                        month: "long",
-                      })}
-                    </p>
-                  </div>
-                  <p className="review-text">{review.review}</p>
-                  <p className="review-rating">Rating: {review.stars}⭐</p>
-                  {user?.id === review.userId && (
-              <OpenModalButton
-                modalComponent={<DeleteReviewModal reviewId={review.id} spotId={numericSpotId} />}
-                buttonText="Delete Review"
-              />
-            )}
-                </li>
-              ))}
-            </ul>
+  <h3>
+    {averageRating
+      ? `⭐ ${averageRating} · ${reviewsCount} ${reviewsCount === 1 ? "review" : "reviews"}`
+      : "New"}
+  </h3>
+  <div className="review-button">
+    {user && !hasReviewed && !isOwner && (
+      <OpenModalButton
+        modalComponent={<ReviewModal spotId={numericSpotId} />}
+        buttonText="Post Your Review"
+      />
+    )}
+  </div>
+  {reviewsCount === 0 ? (
+    user && !isOwner ? (
+      <p>Be the first to post a review!</p>
+    ) : (
+      <p>No reviews yet.</p>
+    )
+  ) : (
+    <ul className="reviews-list">
+      {reviews.map((review) => (
+        <li key={review.id} className="review-item">
+          <div className="review-header">
+            <p className="review-user-name">{review.User?.firstName}</p>
+            <p className="review-date">
+              {new Date(review.createdAt).toLocaleDateString("en-US", {
+                year: "numeric",
+                month: "long",
+              })}
+            </p>
           </div>
+          <p className="review-text">{review.review}</p>
+          <p className="review-rating">Rating: {review.stars}⭐</p>
+          {user?.id === review.userId && (
+            <OpenModalButton
+              modalComponent={
+                <DeleteReviewModal
+                  reviewId={review.id}
+                  spotId={numericSpotId}
+                />
+              }
+              buttonText="Delete Review"
+            />
+          )}
+        </li>
+      ))}
+    </ul>
+  )}
+</div>
         </div>
       </div>
       {showDeleteModal && (
