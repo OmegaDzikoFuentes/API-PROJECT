@@ -72,3 +72,11 @@
 .demo-user-button:hover {
   background-color: #0056b3; /* Darker blue on hover */
 }
+
+.login-error {
+  color: red; /* Red text for error */
+  font-size: 14px; /* Slightly smaller font */
+  margin-top: 5px; /* Add spacing from input fields */
+  text-align: left;
+}
+

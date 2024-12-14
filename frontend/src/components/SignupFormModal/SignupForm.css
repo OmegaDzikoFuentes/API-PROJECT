@@ -53,3 +53,25 @@ input:focus {
   margin-top: -12px;
   margin-bottom: 12px;
 }
+
+.signup-form button[disabled],
+.signup-form button.disabled {
+  background-color: #ccc; /* Gray out the button */
+  cursor: not-allowed;
+  color: #999;
+}
+
+.signup-form button {
+  background-color: #ff5a5f;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  font-size: 16px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.signup-form button:hover:not([disabled]) {
+  background-color: #ff7a7f; /* Lighter red on hover */
+}

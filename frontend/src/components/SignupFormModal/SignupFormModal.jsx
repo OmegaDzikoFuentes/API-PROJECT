@@ -48,6 +48,18 @@ function SignupFormModal() {
     }
   };
 
+  const isSignUpDisabled = () => {
+    return (
+      !email.trim() ||
+      !username.trim() ||
+      username.length < 4 ||
+      !firstName.trim() ||
+      !lastName.trim() ||
+      password.length < 6 ||
+      password !== confirmPassword
+    );
+  };
+
   return (
     <div className="signup-modal">
       <h1 className="signup-label">Sign Up</h1>
@@ -118,7 +130,13 @@ function SignupFormModal() {
         </label>
         {errors.confirmPassword && <p className="error">{errors.confirmPassword}</p>}
 
-        <button type="submit">Sign Up</button>
+        <button
+          type="submit"
+          disabled={isSignUpDisabled()}
+          className={isSignUpDisabled() ? "disabled" : ""}
+        >
+          Sign Up
+        </button>
       </form>
     </div>
   );
