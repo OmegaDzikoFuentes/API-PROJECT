@@ -1,4 +1,4 @@
-# [YOU-CAN-STAY]
+# StayCaytion
 
 ## Database Schema Design
 
