@@ -22,7 +22,7 @@ function SpotDetails() {
   );
   const user = useSelector((state) => state.session.user);
 
- 
+
 
   const reviewsCount = reviews.length;
   const averageRating =
@@ -85,6 +85,20 @@ function SpotDetails() {
     <img src={spot.SpotImages?.[4]?.url || defaultImage} alt="Spot image 4" />
   </div>
 </div>
+<div className="reserve-box">
+        <div className="reserve-box-content">
+          <p className="price">{`$${spot.price}  night`}</p>
+          <div className="rating-info">
+            <span>{`⭐ ${averageRating || "New"}`}</span>
+            {reviewsCount !== undefined && (
+              <span>· {`${reviewsCount} ${reviewsCount === 1 ? "review" : "reviews"}`}</span>
+            )}
+          </div>
+        </div>
+        <button className="reserve-button" onClick={handleReserveClick}>
+          Reserve
+        </button>
+      </div>
       <div className="details-content">
         <div>
           <p className="hosted-by">{`Hosted by ${spot.Owner?.firstName}`}</p>
@@ -129,22 +143,6 @@ function SpotDetails() {
           </div>
         </div>
       </div>
-
-      <div className="reserve-box">
-        <div className="reserve-box-content">
-          <p className="price">{`$${spot.price} / night`}</p>
-          <div className="rating-info">
-            <span>{`⭐ ${averageRating || "New"}`}</span>
-            {reviewsCount !== undefined && (
-              <span>· {`${reviewsCount} reviews`}</span>
-            )}
-          </div>
-        </div>
-        <button className="reserve-button" onClick={handleReserveClick}>
-          Reserve
-        </button>
-      </div>
-
       {showDeleteModal && (
         <div className="modal">
           <h3>Confirm Delete</h3>

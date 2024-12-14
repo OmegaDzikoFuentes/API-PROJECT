@@ -108,9 +108,11 @@
   border: 2px solid #555;
   border-radius: 12px;
   width: 300px;
-  position: sticky; /* Keeps the reserve box in view */
+  
   top: 20px;
   height: fit-content; /* Retain the size even when reviews grow */
+  margin-left: 655px;
+  margin-top: 25px;
 }
 
 .reserve-box-content {
