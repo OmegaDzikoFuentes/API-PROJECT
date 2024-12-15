@@ -22,4 +22,23 @@
     position: absolute;
     background-color: white;
     border-radius: 20px;
+    padding: 30px;
+  }
+
+  confirm-delete {
+    background-color: red;
+    color: white;
+  }
+
+  .confirm-delete:hover {
+    background-color: darkred;
+  }
+
+  .cancel-delete {
+    background-color: grey;
+    color: white;
+  }
+
+  .cancel-delete:hover {
+    background-color: darkgray;
   }
