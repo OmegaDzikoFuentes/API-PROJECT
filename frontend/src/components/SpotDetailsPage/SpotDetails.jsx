@@ -17,6 +17,8 @@ function SpotDetails() {
   const numericSpotId = Number(spotId);
 
   const spot = useSelector((state) => state.spots.byId[numericSpotId]);
+
+ 
   const reviews = useSelector((state) =>
     state.reviews[numericSpotId] ? state.reviews[numericSpotId] : []
   );

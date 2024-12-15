@@ -22,14 +22,46 @@ function SignupFormModal() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // Client-side validations
+    const newErrors = {};
+
+    if (!email.trim() || !/\S+@\S+\.\S+/.test(email)) {
+      newErrors.email = "Invalid email.";
+    }
+
+    if (!username.trim()) {
+      newErrors.username = "Username is required.";
+    } else if (username.length < 4) {
+      newErrors.username = "Username must be at least 4 characters.";
+    } else if (/\S+@\S+\.\S+/.test(username)) {
+      newErrors.username = "Username cannot be an email.";
+    }
+
+    if (!firstName.trim()) {
+      newErrors.firstName = "First name is required.";
+    }
+
+    if (!lastName.trim()) {
+      newErrors.lastName = "Last name is required.";
+    }
+
+    if (!password.trim()) {
+      newErrors.password = "Password is required.";
+    } else if (password.length < 6) {
+      newErrors.password = "Password must be 6 characters or more.";
+    }
 
     if (password !== confirmPassword) {
-      setErrors({
-        confirmPassword: "Confirm Password field must match the Password field",
-      });
+      newErrors.confirmPassword = "Confirm Password field must match the Password field.";
+    }
+
+    // Set errors if found and stop execution
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
       return;
     }
 
+    // Clear errors and proceed with the API call
     setErrors({});
     try {
       await dispatch(
@@ -47,6 +79,7 @@ function SignupFormModal() {
       if (data?.errors) setErrors(data.errors);
     }
   };
+
 
   const isSignUpDisabled = () => {
     return (
