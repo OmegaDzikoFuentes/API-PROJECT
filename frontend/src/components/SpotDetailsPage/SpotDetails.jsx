@@ -21,7 +21,7 @@ function SpotDetails() {
     state.reviews[numericSpotId] ? state.reviews[numericSpotId] : []
   );
   const user = useSelector((state) => state.session.user);
- 
+
 
 
   const reviewsCount = reviews.length;
@@ -121,7 +121,7 @@ function SpotDetails() {
     )}
   </div>
   {reviewsCount === 0 ? (
-    user && !isOwner ? (
+    !isOwner ? (
       <p>Be the first to post a review!</p>
     ) : (
       <p>No reviews yet.</p>
