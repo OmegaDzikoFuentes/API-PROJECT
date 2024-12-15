@@ -69,7 +69,7 @@ const spotsWithRatings = useMemo(() => {
             <div className="spot-details">
               <span>{`${spot.city}, ${spot.state}`}</span>
               <span className="spot-rating">
-                {spot.avgRating ? `⭐ ${spot.avgRating}` : "New"}
+              {(Number(spot.avgRating) === 0) ? "New" : `⭐ ${spot.avgRating}`}
               </span>
             </div>
             <p>{`$${spot.price} night`}</p>
