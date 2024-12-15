@@ -15,24 +15,34 @@ function SpotsList() {
   );
   const reviews = useSelector((state) => state.reviews);
 
-  // Fetch spots and reviews on mount
-  useEffect(() => {
-    dispatch(getSpots());
-    dispatch(getReviews());
-  }, [dispatch]);
 
-  // Memoize spotsWithRatings to optimize re-renders
-  const spotsWithRatings = useMemo(() => {
-    return spots.map((spot) => {
+
+// Fetch spots and reviews on mount
+useEffect(() => {
+dispatch(getSpots());
+dispatch(getReviews());
+}, [dispatch]);
+
+// Update loading state when both spots and reviews are available
+
+
+// Memoize spotsWithRatings to optimize re-renders
+// Memoize spotsWithRatings to optimize re-renders
+const spotsWithRatings = useMemo(() => {
+  const localRatings = JSON.parse(localStorage.getItem("ratings")) || [];
+  return spots.map((spot) => {
       const spotReviews = reviews[spot.id] || [];
-      const reviewsCount = spotReviews.length;
+      const allRatings = [...spotReviews.map((r) => r.stars), ...localRatings];
+      const reviewsCount = allRatings.length;
       const averageRating =
-        reviewsCount > 0
-          ? (spotReviews.reduce((sum, review) => sum + review.stars, 0) / reviewsCount).toFixed(1)
-          : null; // Set to null if no reviews
+          reviewsCount > 0
+              ? (allRatings.reduce((sum, rating) => sum + rating, 0) / reviewsCount).toFixed(1)
+              : null; // Set to null if no reviews or ratings
       return { ...spot, averageRating };
-    });
-  }, [spots, reviews]);
+  });
+}, [spots, reviews]);
+
+
 
   const handleTileClick = (spotId) => {
     navigate(`/spots/${spotId}`);
@@ -59,7 +69,7 @@ function SpotsList() {
             <div className="spot-details">
               <span>{`${spot.city}, ${spot.state}`}</span>
               <span className="spot-rating">
-                {spot.averageRating ? `⭐ ${spot.averageRating}` : "New"}
+                {spot.avgRating ? `⭐ ${spot.avgRating}` : "New"}
               </span>
             </div>
             <p>{`$${spot.price} night`}</p>

@@ -30,7 +30,7 @@ function ManageSpots() {
   const handleTileClick = (spotId) => {
     navigate(`/spots/${spotId}`);
   };
-
+console.log('this is the userspot object.....kkkkkk', userSpots)
   return (
     <div className="manage-spots">
       <h1>Manage Spots</h1>
@@ -57,7 +57,7 @@ function ManageSpots() {
                 <div className="spot-details">
                   <span>{`${spot.city}, ${spot.state}`}</span>
                   <span className="spot-rating">
-                    {spot.averageRating ? `⭐ ${spot.averageRating.toFixed(1)}` : "New"}
+                    {spot.avgRating ? `⭐ ${spot.avgRating}` : "New"}
                   </span>
                 </div>
                 <p>{`$${spot.price}  night`}</p>
