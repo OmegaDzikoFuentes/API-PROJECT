@@ -75,3 +75,9 @@ input:focus {
 .signup-form button:hover:not([disabled]) {
   background-color: #ff7a7f; /* Lighter red on hover */
 }
+
+.error {
+  color: red;
+  font-size: 0.9rem;
+  margin-top: 0.3rem;
+}
