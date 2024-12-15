@@ -367,7 +367,7 @@ const validateReview = [
 ];
 
 // GET /api/spots/:spotId/reviews - review for spot by ID
-router.get('/:spotId/reviews', requireAuth, async (req, res, next) => {
+router.get('/:spotId/reviews', async (req, res, next) => {
   const { spotId } = req.params;
 
   try {
@@ -406,7 +406,7 @@ router.get('/:spotId/reviews', requireAuth, async (req, res, next) => {
 });
 
 // POST /api/spots/:spotId/reviews - review for spot by ID
-router.post('/:spotId/reviews', requireAuth, validateReview, async (req, res, next) => {
+router.post('/:spotId/reviews', validateReview, async (req, res, next) => {
   const { spotId } = req.params;
   const { review, stars } = req.body;
   const { user } = req;

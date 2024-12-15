@@ -62,7 +62,7 @@ export const getSpotById = (spotId) => async (dispatch) => {
   const spot = await response.json();
 
   if (response.ok) {
-    
+
 
     dispatch(addSpot(spot));
     return spot;

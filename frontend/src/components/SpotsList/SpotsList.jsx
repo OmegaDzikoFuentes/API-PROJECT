@@ -29,7 +29,7 @@ function SpotsList() {
       const averageRating =
         reviewsCount > 0
           ? (spotReviews.reduce((sum, review) => sum + review.stars, 0) / reviewsCount).toFixed(1)
-          : null;
+          : null; // Set to null if no reviews
       return { ...spot, averageRating };
     });
   }, [spots, reviews]);
