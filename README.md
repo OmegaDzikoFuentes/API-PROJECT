@@ -4,7 +4,8 @@
 
 ![db-schema]
 
-[db-schema]: ./images/example.png
+[db-schema]: [AIRBNB CLONE.pdf](https://github.com/user-attachments/files/18140614/AIRBNB.CLONE.pdf)
+
 
 ## API Documentation
 
