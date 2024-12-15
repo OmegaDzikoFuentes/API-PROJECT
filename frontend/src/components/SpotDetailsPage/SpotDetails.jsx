@@ -65,8 +65,11 @@ function SpotDetails() {
   };
 
   const defaultImage =
-    "https://farm7.staticflickr.com/6089/6115759179_86316c08ff_z_d.jpg";
-
+    "https://images.pexels.com/photos/2294465/pexels-photo-2294465.jpeg";
+    const defaultImage1 = "https://images.pexels.com/photos/14737628/pexels-photo-14737628.jpeg"
+    const defaultImage2 = "https://images.pexels.com/photos/22598409/pexels-photo-22598409/free-photo-of-top-view-of-neatly-folded-towels-and-a-bathrobe.jpeg"
+    const defaultImage3 = "https://images.pexels.com/photos/9318350/pexels-photo-9318350.jpeg"
+    const defaultImage4 = "https://images.pexels.com/photos/19084143/pexels-photo-19084143/free-photo-of-view-of-a-modern-resort-with-a-swimming-pool-in-the-evening.jpeg"
   return (
     <div className="spot-details-container">
       <h4 className="spot-name-label">{spot.name}</h4>
@@ -79,10 +82,10 @@ function SpotDetails() {
     className="main-image"
   />
   <div className="small-images-grid">
-    <img src={spot.SpotImages?.[1]?.url || defaultImage} alt="Spot image 1" />
-    <img src={spot.SpotImages?.[2]?.url || defaultImage} alt="Spot image 2" />
-    <img src={spot.SpotImages?.[3]?.url || defaultImage} alt="Spot image 3" />
-    <img src={spot.SpotImages?.[4]?.url || defaultImage} alt="Spot image 4" />
+    <img src={spot.SpotImages?.[1]?.url || defaultImage1} alt="Spot image 1" />
+    <img src={spot.SpotImages?.[2]?.url || defaultImage2} alt="Spot image 2" />
+    <img src={spot.SpotImages?.[3]?.url || defaultImage3} alt="Spot image 3" />
+    <img src={spot.SpotImages?.[4]?.url || defaultImage4} alt="Spot image 4" />
   </div>
 </div>
 <div className="reserve-box">
