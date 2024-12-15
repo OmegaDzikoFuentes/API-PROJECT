@@ -19,7 +19,8 @@ function LoginFormModal() {
       closeModal();
     } catch (res) {
       const data = await res.json();
-      if (data && data.errors) setErrors({ credential: "The provided credentials were invalid" });
+      const errorMsg = data.errors?.credential || "The provided credentials were invalid";
+        setErrors({ credential: errorMsg });
     }
   };
 
