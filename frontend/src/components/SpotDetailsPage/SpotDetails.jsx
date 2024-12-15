@@ -21,7 +21,7 @@ function SpotDetails() {
     state.reviews[numericSpotId] ? state.reviews[numericSpotId] : []
   );
   const user = useSelector((state) => state.session.user);
-
+ 
 
 
   const reviewsCount = reviews.length;

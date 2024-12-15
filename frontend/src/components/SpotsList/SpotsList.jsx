@@ -1,26 +1,29 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getSpots } from "../../store/spots";
-import { getReviews } from "../../store/reviews"; // Ensure reviews are fetched
+import { getReviews } from "../../store/reviews";
 import { useNavigate } from "react-router-dom";
 import "./SpotsList.css";
 
 function SpotsList() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const spots = useSelector((state) => state.spots.allIds.map((id) => state.spots.byId[id]));
-  const reviews = useSelector((state) => state.reviews); // Reviews stored in the state
-  const [spotsWithRatings, setSpotsWithRatings] = useState([]);
 
-  // Fetch spots and reviews
+  // Select spots and reviews from Redux state
+  const spots = useSelector((state) =>
+    state.spots.allIds.map((id) => state.spots.byId[id])
+  );
+  const reviews = useSelector((state) => state.reviews);
+
+  // Fetch spots and reviews on mount
   useEffect(() => {
     dispatch(getSpots());
-    dispatch(getReviews()); // Fetch reviews for all spots
+    dispatch(getReviews());
   }, [dispatch]);
 
-  // Calculate average rating for each spot
-  useEffect(() => {
-    const updatedSpots = spots.map(spot => {
+  // Memoize spotsWithRatings to optimize re-renders
+  const spotsWithRatings = useMemo(() => {
+    return spots.map((spot) => {
       const spotReviews = reviews[spot.id] || [];
       const reviewsCount = spotReviews.length;
       const averageRating =
@@ -29,7 +32,6 @@ function SpotsList() {
           : null;
       return { ...spot, averageRating };
     });
-    setSpotsWithRatings(updatedSpots);
   }, [spots, reviews]);
 
   const handleTileClick = (spotId) => {
@@ -43,10 +45,13 @@ function SpotsList() {
           key={spot.id}
           className="spot-tile"
           onClick={() => handleTileClick(spot.id)}
-          title={spot.name} // Tooltip with spot name
+          title={spot.name}
         >
           <img
-            src={spot.previewImage || "https://farm7.staticflickr.com/6089/6115759179_86316c08ff_z_d.jpg"} // Fallback image if none provided
+            src={
+              spot.previewImage ||
+              "https://farm7.staticflickr.com/6089/6115759179_86316c08ff_z_d.jpg"
+            }
             alt={spot.name}
             className="spot-image"
           />
@@ -54,12 +59,10 @@ function SpotsList() {
             <div className="spot-details">
               <span>{`${spot.city}, ${spot.state}`}</span>
               <span className="spot-rating">
-                   {spot.averageRating
-                     ? `⭐ ${spot.averageRating}`
-                          : "New"}
+                {spot.averageRating ? `⭐ ${spot.averageRating}` : "New"}
               </span>
             </div>
-            <p>{`$${spot.price}  night`}</p>
+            <p>{`$${spot.price} night`}</p>
           </div>
         </div>
       ))}
