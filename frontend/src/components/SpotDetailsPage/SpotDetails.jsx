@@ -23,7 +23,7 @@ function SpotDetails() {
   );
   const user = useSelector((state) => state.session.user);
 
-  
+
 
 
 
@@ -107,7 +107,11 @@ function SpotDetails() {
       </div>
       <div className="details-content">
         <div>
-          <p className="hosted-by">{`Hosted by ${spot.Owner?.firstName} ${spot.Owner?.lastName}`}</p>
+        <p className="hosted-by">
+  {spot.Owner?.firstName && spot.Owner?.lastName
+    ? `Hosted by ${spot.Owner.firstName} ${spot.Owner.lastName}`
+    : "Loading... please refresh"}
+         </p>
           <p>{spot.description}</p>
           <div className="reviews-section">
   <h3>
