@@ -6,6 +6,7 @@ const ADD_SPOT = "spots/addSpot";
 const UPDATE_SPOT = "spots/updateSpot";
 const REMOVE_SPOT = "spots/removeSpot";
 const ADD_SPOT_IMAGE = "spots/addSpotImage";
+const SET_SPOT_DETAILS = "spots/setSpotDetails";
 
 // Action Creators
 const setSpots = (spots) => ({
@@ -16,6 +17,12 @@ const setSpots = (spots) => ({
 const setUserSpots = (spots) => ({
   type: SET_USER_SPOTS,
   payload: spots,
+});
+
+// Action Creator for loading spot details
+const setSpotDetails = (spot) => ({
+  type: SET_SPOT_DETAILS,
+  payload: spot,
 });
 
 const addSpot = (spot) => ({
@@ -60,11 +67,11 @@ export const getUserSpots = () => async (dispatch) => {
 export const getSpotById = (spotId) => async (dispatch) => {
   const response = await csrfFetch(`/api/spots/${spotId}`);
   const spot = await response.json();
-
+  console.log('this is the owner having spot!!ooooooooooooooo', spot)
   if (response.ok) {
 
 
-    dispatch(addSpot(spot));
+    dispatch(setSpotDetails(spot));
     return spot;
   }
 };
@@ -216,6 +223,17 @@ export default function spotsReducer(state = initialState, action) {
       newState.allIds = newState.allIds.filter((id) => id !== action.payload);
       return newState;
     }
+    case SET_SPOT_DETAILS: {
+      const spot = action.payload; // Full spot object, which includes the Owner
+      return {
+      ...state,
+      byId: {
+      ...state.byId,
+      [spot.id]: spot, // Add/update the spot (with Owner included) in the byId object
+      },
+      allIds: state.allIds.includes(spot.id) ? state.allIds : [...state.allIds, spot.id], // Adds the spot ID to allIds if not already present
+      };
+      }
     case ADD_SPOT_IMAGE: {
       const { image, spotId } = action.payload;
       const updatedSpot = {
@@ -226,6 +244,7 @@ export default function spotsReducer(state = initialState, action) {
         ...state,
         byId: { ...state.byId, [spotId]: updatedSpot },
       };
+
     }
     default:
       return state;

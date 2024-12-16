@@ -18,11 +18,12 @@ function SpotDetails() {
 
   const spot = useSelector((state) => state.spots.byId[numericSpotId]);
 
- 
   const reviews = useSelector((state) =>
     state.reviews[numericSpotId] ? state.reviews[numericSpotId] : []
   );
   const user = useSelector((state) => state.session.user);
+
+  
 
 
 
@@ -106,7 +107,7 @@ function SpotDetails() {
       </div>
       <div className="details-content">
         <div>
-          <p className="hosted-by">{`Hosted by ${spot.Owner?.firstName}`}</p>
+          <p className="hosted-by">{`Hosted by ${spot.Owner?.firstName} ${spot.Owner?.lastName}`}</p>
           <p>{spot.description}</p>
           <div className="reviews-section">
   <h3>
