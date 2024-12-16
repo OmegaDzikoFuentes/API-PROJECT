@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
-import { getSpots, getSpotById } from "../../store/spots";
-import { getReviews, deleteReview } from "../../store/reviews";
+import { getSpotById } from "../../store/spots";
+import {  deleteReview } from "../../store/reviews";
 import OpenModalButton from "../OpenModalButton/OpenModalButton";
 import ReviewModal from "../ReviewModal/ReviewModal";
 import DeleteReviewModal from "../DeleteReviewModal/DeleteReviewModal";
@@ -11,6 +11,7 @@ import "./SpotDetails.css";
 function SpotDetails() {
   const { spotId } = useParams();
   const dispatch = useDispatch();
+  const [loading, setLoading] = useState(true);
 
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [reviewToDelete, setReviewToDelete] = useState(null);
@@ -37,16 +38,21 @@ function SpotDetails() {
   const hasReviewed = reviews.some((review) => review.userId === user?.id);
 
   useEffect(() => {
-    dispatch(getSpots());
-  }, [dispatch]);
+// Dispatch the action to fetch the spot details when the component mounts
+dispatch(getSpotById(spotId))
+.then(() => {
+setLoading(false); // Set loading to false once the data is fetched
+})
+.catch((err) => {
+console.error("Error fetching spot data:", err);
+setLoading(false); // Set loading to false even on error
+});
+}, [dispatch, spotId]);
 
-  useEffect(() => {
-    if (!spot) {
-      dispatch(getSpotById(numericSpotId));
-    } else {
-      dispatch(getReviews(numericSpotId));
-    }
-  }, [dispatch, numericSpotId, spot]);
+// If loading, display a loading message or spinner
+if (loading) {
+return <div>Loading...</div>;
+}
 
 
 
