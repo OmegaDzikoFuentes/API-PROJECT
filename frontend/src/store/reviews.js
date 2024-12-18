@@ -5,10 +5,20 @@ const ADD_REVIEW = "reviews/addReview";
 const REMOVE_REVIEW = "reviews/removeReview";
 
 
-export const setReviews = ({ spotId, reviews }) => ({
-  type: SET_REVIEWS,
-  payload: { spotId, reviews },
-});
+export const setReviews = ({ spotId, reviews }) => {
+  const reviewsById = {};
+  const reviewIds = [];
+
+  reviews.forEach((review) => {
+    reviewsById[review.id] = review;
+    reviewIds.push(review.id);
+  });
+
+  return {
+    type: SET_REVIEWS,
+    payload: { spotId, reviewsById, reviewIds },
+  };
+};
 
 export const addReview = ({ spotId, review }) => ({
   type: ADD_REVIEW,
@@ -30,6 +40,7 @@ export const getReviews = (spotId) => async (dispatch) => {
     dispatch(setReviews({ spotId, reviews }));
   }
 };
+
 
 export const createReview = (spotId, reviewData) => async (dispatch) => {
   const response = await csrfFetch(`/api/spots/${spotId}/reviews`, {
@@ -58,6 +69,7 @@ export const createReview = (spotId, reviewData) => async (dispatch) => {
 };
 
 
+
 export const deleteReview = (spotId, reviewId) => async (dispatch) => {
   const response = await csrfFetch(`/api/reviews/${reviewId}`, {
     method: "DELETE",
@@ -69,29 +81,51 @@ export const deleteReview = (spotId, reviewId) => async (dispatch) => {
 };
 
 
-const initialState = {};
+
+const initialState = {
+  byId: {},       // { [reviewId]: review }
+  bySpot: {},     // { [spotId]: [reviewId, reviewId, ...] }
+};
 
 export default function reviewsReducer(state = initialState, action) {
   switch (action.type) {
     case SET_REVIEWS: {
-      const { spotId, reviews } = action.payload;
+      const { spotId, reviewsById, reviewIds } = action.payload;
       return {
         ...state,
-        [spotId]: reviews,
+        byId: { ...state.byId, ...reviewsById },
+        bySpot: { ...state.bySpot, [spotId]: reviewIds },
       };
     }
     case ADD_REVIEW: {
       const { spotId, review } = action.payload;
+
       return {
         ...state,
-        [spotId]: [...(state[spotId] || []), review],
+        byId: { ...state.byId, [review.id]: review },
+        bySpot: {
+          ...state.bySpot,
+          [spotId]: [...(state.bySpot[spotId] || []), review.id],
+        },
       };
     }
     case REMOVE_REVIEW: {
       const { spotId, reviewId } = action.payload;
+
+      // Remove review from byId
+      const newById = { ...state.byId };
+      delete newById[reviewId];
+
+      // Remove review ID from bySpot
+      const newBySpot = {
+        ...state.bySpot,
+        [spotId]: state.bySpot[spotId]?.filter((id) => id !== reviewId),
+      };
+
       return {
         ...state,
-        [spotId]: state[spotId]?.filter((review) => review.id !== reviewId) || [],
+        byId: newById,
+        bySpot: newBySpot,
       };
     }
     default:

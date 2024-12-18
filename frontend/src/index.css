@@ -1,1 +1,3 @@
-/* TODO: Add sitewide styles */
+html {
+    background: linear-gradient(to left, #FFB347, #56AB2F, #DA70);
+}
