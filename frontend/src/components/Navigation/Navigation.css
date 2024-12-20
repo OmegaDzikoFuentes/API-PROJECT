@@ -3,7 +3,7 @@
   justify-content: space-between;
   align-items: center;
   padding: 16px 32px;
-  background: linear-gradient(to right, #FFB347, #56AB2F, #DA70);
+  background: #e7d4d4;
   border-bottom: 1px solid #ddd;
 }
 
@@ -24,6 +24,7 @@
   font-weight: bold;
   margin-left: 10px;
   padding-top: 15px;
+
 }
 
 .nav-links {
