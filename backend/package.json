@@ -30,8 +30,8 @@
     "per-env": "^1.0.2",
     "pg": "^8.13.0",
     "qs": "^6.11.2",
-    "sequelize": "^6.37.10",
-    "sequelize-cli": "^6.6.3",
+    "sequelize": "^6.37.5",
+    "sequelize-cli": "^6.6.2",
     "get-intrinsic": "1.2.1"
   },
   "devDependencies": {
