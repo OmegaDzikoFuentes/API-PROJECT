@@ -82,7 +82,7 @@ function ProfileButton({ user }) {
                     to="/manage-spots"
                     onClick={() => setShowMenu(false)}
                   >
-                    Manage Spots
+                       Manage Spots
                   </NavLink>
                 </motion.li>
                 <motion.li className="button-detail" whileHover={{ x: 5 }}>

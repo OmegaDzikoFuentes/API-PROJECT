@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlaceOfWorship, faBars, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { NavLink } from "react-router-dom";
