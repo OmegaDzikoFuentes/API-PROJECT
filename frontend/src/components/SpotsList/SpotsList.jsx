@@ -3,6 +3,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { getSpots } from "../../store/spots";
 import { getReviews } from "../../store/reviews";
 import { useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
+import { useInView } from "react-intersection-observer";
 import "./SpotsList.css";
 
 function SpotsList() {
@@ -49,34 +51,62 @@ const spotsWithRatings = useMemo(() => {
   };
 
   return (
-    <div className="spots-container">
-      {spotsWithRatings.map((spot) => (
-        <div
-          key={spot.id}
-          className="spot-tile"
-          onClick={() => handleTileClick(spot.id)}
-          title={spot.name}
+    <motion.div
+    className="spots-container"
+    initial={{ opacity: 0 }}
+    animate={{ opacity: 1 }}
+    transition={{ duration: 0.5 }}
+  >
+    {spotsWithRatings.map((spot, index) => (
+      <SpotTile key={spot.id} spot={spot} index={index} onClick={handleTileClick} />
+    ))}
+  </motion.div>
+);
+}
+
+function SpotTile({ spot, index, onClick }) {
+const [ref, inView] = useInView({
+  triggerOnce: true,
+  threshold: 0.1,
+});
+
+return (
+  <motion.div
+    ref={ref}
+    className="spot-tile"
+    onClick={() => onClick(spot.id)}
+    title={spot.name}
+    initial={{ opacity: 0, y: 50 }}
+    animate={inView ? { opacity: 1, y: 0 } : {}}
+    transition={{ duration: 0.5, delay: index * 0.1 }}
+    whileHover={{ scale: 1.05, transition: { duration: 0.2 } }}
+  >
+    <motion.img
+      src={spot.previewImage || "https://farm7.staticflickr.com/6089/6115759179_86316c08ff_z_d.jpg"}
+      alt={spot.name}
+      className="spot-image"
+      whileHover={{ scale: 1.1 }}
+      transition={{ duration: 0.3 }}
+    />
+    <motion.div className="spot-info" layout>
+      <motion.div className="spot-details" layout>
+        <span>{`${spot.city}, ${spot.state}`}</span>
+        <motion.span
+          className="spot-rating"
+          initial={{ scale: 0 }}
+          animate={{ scale: 1 }}
+          transition={{ delay: 0.2, type: "spring", stiffness: 500 }}
         >
-          <img
-            src={
-              spot.previewImage ||
-              "https://farm7.staticflickr.com/6089/6115759179_86316c08ff_z_d.jpg"
-            }
-            alt={spot.name}
-            className="spot-image"
-          />
-          <div className="spot-info">
-            <div className="spot-details">
-              <span>{`${spot.city}, ${spot.state}`}</span>
-              <span className="spot-rating">
-              {(Number(spot.avgRating) === 0) ? "New" : `⭐ ${spot.avgRating}`}
-              </span>
-            </div>
-            <p>{`$${spot.price} night`}</p>
-          </div>
-        </div>
-      ))}
-    </div>
+          {Number(spot.avgRating) === 0 ? "New" : `⭐ ${spot.avgRating}`}
+        </motion.span>
+      </motion.div>
+      <motion.p
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.3 }}
+      >{`$${spot.price} night`}</motion.p>
+    </motion.div>
+  </motion.div>
   );
 }
 
