@@ -1,0 +1,44 @@
+.profile-button {
+    position: relative;
+  }
+  
+  .menu-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.5rem;
+  }
+  
+  .profile-dropdown {
+    position: absolute;
+    right: 0;
+    top: 100%;
+    background-color: white;
+    border-radius: 4px;
+    box-shadow: 0 2px 10px rgba(7, 120, 116, 0.521);
+    padding: 1rem;
+    z-index: 1000;
+  }
+  
+  .button-detail {
+    margin-bottom: 0.5rem;
+  }
+  
+  .manage-spots {
+    text-decoration: none;
+    color: inherit;
+  }
+  
+  button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+  }
+  
+  button:hover {
+    background-color: #15dc2f84;
+  }
+  
