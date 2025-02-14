@@ -1,100 +1,89 @@
-/*creatspot form css */
-form {
-  width: 400px;
-  margin: 40px auto;
-  padding: 24px;
-  border: 1px solid #ddd;
-  border-radius: 12px;
-  background-color: #fff;
-  box-shadow: 0 4px 6px #0000001a;
+/* CreateSpotForm.css */
+.create-spot-container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 40px 20px;
+  font-family: 'Arial', sans-serif;
 }
 
 h1 {
-  font-size: 24px;
+  font-size: 32px;
   color: #333;
-  margin-bottom: 16px;
+  margin-bottom: 30px;
   text-align: center;
 }
 
+.form-section {
+  margin-bottom: 40px;
+}
+
 h2 {
-  font-size: 18px;
-  color: #555;
-  margin: 20px 0 8px;
+  font-size: 24px;
+  color: #444;
+  margin-bottom: 10px;
 }
 
 p {
-  font-size: 14px;
-  color: #777;
-  margin-bottom: 12px;
+  font-size: 16px;
+  color: #666;
+  margin-bottom: 20px;
+}
+
+.input-group {
+  margin-bottom: 20px;
+}
+
+.input-group-inline {
+  display: flex;
+  gap: 20px;
 }
 
 label {
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 16px;
+  display: block;
+  font-size: 16px;
+  color: #555;
+  margin-bottom: 5px;
 }
 
-input,
-textarea {
+input, textarea {
+  width: 100%;
   padding: 10px;
-  font-size: 14px;
+  font-size: 16px;
   border: 1px solid #ddd;
   border-radius: 4px;
-  margin-top: 4px;
+  transition: border-color 0.3s ease;
+}
+
+input:focus, textarea:focus {
+  outline: none;
+  border-color: #ff385c;
 }
 
 textarea {
   min-height: 100px;
-  resize: none;
-}
-
-input:focus,
-textarea:focus {
-  outline: none;
-  border-color: #ff5a5f;
-  box-shadow: 0 0 4px rgba(255, 90, 95, 0.4);
-}
-
-button {
-  display: block;
-  width: 100%;
-  padding: 12px;
-  font-size: 16px;
-  color: #fff;
-  background-color: #ff5a5f;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  margin-top: 16px;
-}
-
-button:hover {
-  background-color: #e04e53;
+  resize: vertical;
 }
 
 .error {
-  color: #d9534f;
-  font-size: 12px;
-  margin-top: 4px;
+  color: #ff385c;
+  font-size: 14px;
+  margin-top: 5px;
 }
 
-form > h2 {
-  margin-top: 24px;
-  border-bottom: 1px solid #ddd;
-  padding-bottom: 8px;
+button[type="submit"] {
+  display: block;
+  width: 100%;
+  padding: 12px;
+  background-color: #ff385c;
+  color: white;
+  font-size: 18px;
+  font-weight: bold;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
 }
 
-form > h2:first-of-type {
-  margin-top: 0;
-}
-
-@media (max-width: 768px) {
-  form {
-    padding: 16px;
-  }
-
-  button {
-    font-size: 14px;
-    padding: 10px;
-  }
+button[type="submit"]:hover {
+  background-color: #e31c5f;
 }
