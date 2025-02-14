@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
+import { motion, AnimatePresence } from "framer-motion";
 import { getSpotById } from "../../store/spots";
-import {  deleteReview } from "../../store/reviews";
+import { deleteReview } from "../../store/reviews";
 import OpenModalButton from "../OpenModalButton/OpenModalButton";
 import ReviewModal from "../ReviewModal/ReviewModal";
 import DeleteReviewModal from "../DeleteReviewModal/DeleteReviewModal";
@@ -50,11 +51,6 @@ setLoading(false); // Set loading to false even on error
 }, [dispatch, spotId]);
 
 // If loading, display a loading message or spinner
-if (loading) {
-return <div>Loading...</div>;
-}
-
-
 
   const confirmDeleteReview = async () => {
     await dispatch(deleteReview(numericSpotId, reviewToDelete));
@@ -79,112 +75,153 @@ return <div>Loading...</div>;
     const defaultImage2 = "https://images.pexels.com/photos/22598409/pexels-photo-22598409/free-photo-of-top-view-of-neatly-folded-towels-and-a-bathrobe.jpeg"
     const defaultImage3 = "https://images.pexels.com/photos/9318350/pexels-photo-9318350.jpeg"
     const defaultImage4 = "https://images.pexels.com/photos/19084143/pexels-photo-19084143/free-photo-of-view-of-a-modern-resort-with-a-swimming-pool-in-the-evening.jpeg"
-  return (
-    <div className="spot-details-container">
-      <h4 className="spot-name-label">{spot.name}</h4>
-      <p className="location">{`${spot.city}, ${spot.state}, ${spot.country}`}</p>
-
-      <div className="images-container">
-  <img
-    src={spot.previewImage || defaultImage}
-    alt={spot.name}
-    className="main-image"
-  />
-  <div className="small-images-grid">
-    <img src={spot.SpotImages?.[1]?.url || defaultImage1} alt="Spot image 1" />
-    <img src={spot.SpotImages?.[2]?.url || defaultImage2} alt="Spot image 2" />
-    <img src={spot.SpotImages?.[3]?.url || defaultImage3} alt="Spot image 3" />
-    <img src={spot.SpotImages?.[4]?.url || defaultImage4} alt="Spot image 4" />
-  </div>
-</div>
-<div className="reserve-box">
-        <div className="reserve-box-content">
-          <p className="price">{`$${spot.price}  night`}</p>
-          <div className="rating-info">
-            <span>{`⭐ ${averageRating || "New"}`}</span>
-            {reviewsCount !== undefined && (
-              <span>· {`${reviewsCount} ${reviewsCount === 1 ? "review" : "reviews"}`}</span>
+    const imageVariants = {
+      hover: { scale: 1.05, transition: { duration: 0.3 } }
+    };
+  
+    if (loading) {
+      return (
+        <div className="loading-container">
+          <motion.div
+            className="loading-spinner"
+            animate={{ rotate: 360 }}
+            transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+          />
+          <p>Loading...</p>
+        </div>
+      );
+    }
+  
+    if (!spot) return <p>Spot not found</p>;
+  
+    return (
+      <motion.div
+        className="spot-details-container"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.5 }}
+      >
+        <h1 className="spot-name-label">{spot.name}</h1>
+        <p className="location">{`${spot.city}, ${spot.state}, ${spot.country}`}</p>
+  
+        <div className="images-container">
+          <motion.img
+            src={spot.previewImage || defaultImage}
+            alt={spot.name}
+            className="main-image"
+            variants={imageVariants}
+            whileHover="hover"
+          />
+          <div className="small-images-grid">
+            {[defaultImage1, defaultImage2, defaultImage3, defaultImage4].map((img, index) => (
+              <motion.img
+                key={index}
+                src={spot.SpotImages?.[index + 1]?.url || img}
+                alt={`Spot image ${index + 1}`}
+                variants={imageVariants}
+                whileHover="hover"
+              />
+            ))}
+          </div>
+        </div>
+  
+        <div className="details-content">
+          <div className="spot-info">
+            <p className="hosted-by">
+              {spot.Owner?.firstName && spot.Owner?.lastName
+                ? `Hosted by ${spot.Owner.firstName} ${spot.Owner.lastName}`
+                : "Loading... please refresh"}
+            </p>
+            <p className="description">{spot.description}</p>
+          </div>
+  
+          <motion.div
+            className="reserve-box"
+            initial={{ y: 20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ delay: 0.3 }}
+          >
+            <div className="reserve-box-content">
+              <p className="price">{`$${spot.price} / night`}</p>
+              <div className="rating-info">
+                <span>{`⭐ ${averageRating || "New"}`}</span>
+                {reviewsCount !== undefined && (
+                  <span>· {`${reviewsCount} ${reviewsCount === 1 ? "review" : "reviews"}`}</span>
+                )}
+              </div>
+            </div>
+            <motion.button
+              className="reserve-button"
+              onClick={handleReserveClick}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              Reserve
+            </motion.button>
+          </motion.div>
+        </div>
+  
+        <div className="reviews-section">
+          <h2>
+            {averageRating
+              ? `⭐ ${averageRating} · ${reviewsCount} ${reviewsCount === 1 ? "review" : "reviews"}`
+              : "New"}
+          </h2>
+          <div className="review-button">
+            {user && !hasReviewed && !isOwner && (
+              <OpenModalButton
+                modalComponent={<ReviewModal spotId={numericSpotId} />}
+                buttonText="Post Your Review"
+              />
             )}
           </div>
-        </div>
-        <button className="reserve-button" onClick={handleReserveClick}>
-          Reserve
-        </button>
-      </div>
-      <div className="details-content">
-        <div>
-        <p className="hosted-by">
-  {spot.Owner?.firstName && spot.Owner?.lastName
-    ? `Hosted by ${spot.Owner.firstName} ${spot.Owner.lastName}`
-    : "Loading... please refresh"}
-         </p>
-          <p>{spot.description}</p>
-          <div className="reviews-section">
-  <h3>
-    {averageRating
-      ? `⭐ ${averageRating} · ${reviewsCount} ${reviewsCount === 1 ? "review" : "reviews"}`
-      : "New"}
-  </h3>
-  <div className="review-button">
-    {user && !hasReviewed && !isOwner && (
-      <OpenModalButton
-        modalComponent={<ReviewModal spotId={numericSpotId} />}
-        buttonText="Post Your Review"
-      />
-    )}
-  </div>
-  {reviewsCount === 0 ? (
-    !isOwner ? (
-      <p>Be the first to post a review!</p>
-    ) : (
-      <p>No reviews yet.</p>
-    )
-  ) : (
-    <ul className="reviews-list">
-      {reviews.map((review) => (
-        <li key={review.id} className="review-item">
-          <div className="review-header">
-            <p className="review-user-name">{review.User?.firstName}</p>
-            <p className="review-date">
-              {new Date(review.createdAt).toLocaleDateString("en-US", {
-                year: "numeric",
-                month: "long",
-              })}
-            </p>
-          </div>
-          <p className="review-text">{review.review}</p>
-          <p className="review-rating">Rating: {review.stars}⭐</p>
-          {user?.id === review.userId && (
-            <OpenModalButton
-              modalComponent={
-                <DeleteReviewModal
-                  reviewId={review.id}
-                  spotId={numericSpotId}
-                />
-              }
-              buttonText="Delete Review"
-            />
+          {reviewsCount === 0 ? (
+            !isOwner ? (
+              <p>Be the first to post a review!</p>
+            ) : (
+              <p>No reviews yet.</p>
+            )
+          ) : (
+            <AnimatePresence>
+              <motion.ul className="reviews-list">
+                {reviews.map((review) => (
+                  <motion.li
+                    key={review.id}
+                    className="review-item"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -20 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    <div className="review-header">
+                      <p className="review-user-name">{review.User?.firstName}</p>
+                      <p className="review-date">
+                        {new Date(review.createdAt).toLocaleDateString("en-US", {
+                          year: "numeric",
+                          month: "long",
+                        })}
+                      </p>
+                    </div>
+                    <p className="review-text">{review.review}</p>
+                    <p className="review-rating">Rating: {review.stars}⭐</p>
+                    {user?.id === review.userId && (
+                      <OpenModalButton
+                        modalComponent={
+                          <DeleteReviewModal
+                            reviewId={review.id}
+                            spotId={numericSpotId}
+                          />
+                        }
+                        buttonText="Delete Review"
+                      />
+                    )}
+                  </motion.li>
+                ))}
+              </motion.ul>
+            </AnimatePresence>
           )}
-        </li>
-      ))}
-    </ul>
-  )}
-</div>
         </div>
-      </div>
-      {showDeleteModal && (
-        <div className="modal">
-          <h3>Confirm Delete</h3>
-          <p>Are you sure you want to delete this review?</p>
-          <button className="confirm-delete" onClick={confirmDeleteReview}>
-            Yes (Delete Review)
-          </button>
-          <button className="cancel-delete" onClick={cancelDeleteReview}>
-            No (Keep Review)
-          </button>
-        </div>
-      )}
-    </div>
+      </motion.div>
   );
 }
 
