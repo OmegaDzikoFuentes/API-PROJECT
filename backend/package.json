@@ -29,8 +29,10 @@
     "morgan": "^1.10.0",
     "per-env": "^1.0.2",
     "pg": "^8.13.0",
+    "qs": "^6.11.2",
     "sequelize": "^6.37.4",
-    "sequelize-cli": "^6.6.2"
+    "sequelize-cli": "^6.6.2",
+    "get-intrinsic": "1.2.1"
   },
   "devDependencies": {
     "dotenv-cli": "^7.4.2",
