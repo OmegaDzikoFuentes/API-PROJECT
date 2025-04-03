@@ -1,82 +1,40 @@
 .login-modal {
-  width: 300px;
-  display: flex;
-  flex-direction: column; /* Stack children vertically */
-  justify-content: center;
-  align-items: center;
-  margin: 2px;
-  border-radius: 20px;
-  background-color: #1324
-
-}
-.login-form-label {
-  font-size: 15px;
-  color: #333;
-  justify-content: flex-start;
-
+  background: #9BB5CE; /* Powder blue base */
+  border: 3px solid #E0E0E0; /* Chrome trim */
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  padding: 2rem;
+  width: 380px;
 }
 
 .login-label {
-  font-size: 24px;
-  font-weight: 600;
-  color: #333;
-  text-align: left;
+  color: #2A4A6B; /* Classic Chevy dark blue */
+  font-family: 'Bebas Neue', cursive;
+  font-size: 2.5rem;
+  text-shadow: 1px 1px #FFF;
 }
 
 .login-form {
-  width: 80%;
-  padding: 24px;
-  background-color: gainsboro;
+  background: linear-gradient(145deg, #F8F9FA 0%, #E9ECEF 100%);
+  border-radius: 12px;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.demo-user-button {
-  width: 45%;
-  margin: 30px;
+.login-form-label {
+  font-family: 'Roboto Condensed', sans-serif;
+  color: #4A4A4A;
+  letter-spacing: 0.5px;
 }
 
 .login-button {
-  width: 100%;
-  padding: 10px;
-  font-size: 16px;
-  font-weight: bold;
-  color: white;
-  background-color: #008080; /* Green background */
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
+  background: linear-gradient(to bottom, #C41E3A 0%, #A1162C 100%); /* Classic red accent */
+  border: 1px solid #E0E0E0;
+  border-radius: 25px;
+  font-family: 'Bebas Neue', cursive;
+  letter-spacing: 1px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .login-button:hover {
-  background-color: #45a049; /* Darker green on hover */
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(196, 30, 58, 0.3);
 }
-
-.login-button:disabled {
-  background-color: #d3d3d3; /* Light gray background when disabled */
-  color: #a9a9a9; /* Gray text color when disabled */
-  cursor: not-allowed; /* Change cursor to not-allowed */
-}
-
-.demo-user-button {
-  width: 45%;
-  margin: 30px;
-  padding: 10px;
-  font-size: 14px;
-  color: white;
-  background-color: #014D4E;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-.demo-user-button:hover {
-  background-color: #0056b3; /* Darker blue on hover */
-}
-
-.login-error {
-  color: red; /* Red text for error */
-  font-size: 14px; /* Slightly smaller font */
-  margin-top: 5px; /* Add spacing from input fields */
-  text-align: left;
-}
-

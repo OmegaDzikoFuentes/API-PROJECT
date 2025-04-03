@@ -1,132 +1,17 @@
 .navigation {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 16px 32px;
-  background: #E2E5EB;
-  border-bottom: 1px solid #ddd;
-}
-
-.logo {
-  display: flex;
-  align-items: center;
-  color:#008080; 
-  margin-left: 10px;
-  
-}
-
-.favicon {
-  display: flex;
-  font-size: 32px;
-  color:   #008080;
-  gap: 3px;
+  background: linear-gradient(to right, #9BB5CE 0%, #B0C4DE 100%);
+  border-bottom: 3px solid #E0E0E0;
 }
 
 .nav-brand {
-  font-size: 24px;
-  color: #008080;
-  text-decoration: none;
-  font-weight: bold;
-  margin-left: 10px;
-  padding-top: 15px;
-
-}
-
-.nav-links {
-  display: flex;
-  align-items: center;
-  gap: 16px;
+  color: #2A4A6B;
+  text-shadow: 1px 1px #FFF;
+  font-family: 'Bebas Neue', cursive;
+  letter-spacing: 2px;
 }
 
 .create-spot-button {
-  font-size: 14px;
-  color: #555;
-  text-decoration: none;
-  background-color: #05c6a6;
-  padding: 8px 12px;
-  border-radius: 4px;
+  background: linear-gradient(to bottom, #C41E3A 0%, #A1162C 100%);
+  color: white !important;
+  border-radius: 25px;
 }
-
-.create-spot-button:hover {
-  background-color: #ddd;
-}
-
-.create-spot-button:focus {
-  outline: none;
-}
-
-.profile-button-container {
-  position: relative;
-}
-
-
-.profile-button {
-  position: relative;
-}
-
-.menu-button {
-  border: none;
-  cursor: pointer;
-  font-size: 24px;
-  background-color: #008080;
-  height: 47px
-}
-
-.profile-dropdown {
-  position: absolute;
-  top: 50px;
-  right: 0;
-  background-color: rgba(152, 255, 224, 0.475);
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(134, 114, 234, 0.651);
-  padding: 10px;
-  z-index: 1000;
-}
-
-.profile-dropdown.hidden {
-  display: none;
-}
-
-.profile-dropdown li {
-  margin: 8px 0;
-  font-size: 14px;
-}
-
-.profile-dropdown button {
-  background: none;
-  border: none;
-  color: #555;
-  cursor: pointer;
-  width: 100%;
-  text-align: left;
-  padding: 8px;
-  border-radius: 4px;
-}
-
-.profile-dropdown button:hover {
-  background-color: #f5f5f5;
-}
-
-.profile-dropdown li:first-child {
-  font-weight: bold;
-  color: #333;
-}
-
-.profile-dropdown li:nth-child(2) {
-  color: #777;
-  margin-bottom: 12px;
-}
-
-.button-detail {
-
-  padding: 8px 12px;
-  border-radius: 4px;
-
-}
-
-.manage-spots {
-  text-decoration: none;
-  margin: -30px;
-}
-
