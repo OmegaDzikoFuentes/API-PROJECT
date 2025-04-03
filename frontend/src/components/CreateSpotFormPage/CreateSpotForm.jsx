@@ -97,7 +97,7 @@ function CreateSpotForm() {
       <h1>Create a New Spot</h1>
       <form onSubmit={handleSubmit}>
         <motion.div className="form-section" initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.1 }}>
-          <h2>Where's your place located?</h2>
+          <h2>Where&apos;s your place located?</h2>
           <p>Guests will only get your exact address once they booked a reservation.</p>
           {["country", "address", "city", "state"].map((field) => (
             <motion.div key={field} className="input-group" whileHover={{ scale: 1.02 }}>
@@ -209,7 +209,7 @@ function CreateSpotForm() {
            {/* Title Section */}
            <motion.div className="form-section" initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.4 }}>
           <h2>Create a title for your spot</h2>
-          <p>Catch guests' attention with a spot title that highlights what makes your place special.</p>
+          <p>Catch guests&apos; attention with a spot title that highlights what makes your place special.</p>
           <motion.div className="input-group" whileHover={{ scale: 1.02 }}>
             <label htmlFor="name">Name of your spot</label>
             <input

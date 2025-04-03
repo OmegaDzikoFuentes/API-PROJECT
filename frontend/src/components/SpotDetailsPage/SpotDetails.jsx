@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { getSpotById } from "../../store/spots";
-import { deleteReview } from "../../store/reviews";
+
 import OpenModalButton from "../OpenModalButton/OpenModalButton";
 import ReviewModal from "../ReviewModal/ReviewModal";
 import DeleteReviewModal from "../DeleteReviewModal/DeleteReviewModal";
@@ -14,8 +14,8 @@ function SpotDetails() {
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(true);
 
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [reviewToDelete, setReviewToDelete] = useState(null);
+
+
   const numericSpotId = Number(spotId);
 
   const spot = useSelector((state) => state.spots.byId[numericSpotId]);
@@ -52,16 +52,9 @@ setLoading(false); // Set loading to false even on error
 
 // If loading, display a loading message or spinner
 
-  const confirmDeleteReview = async () => {
-    await dispatch(deleteReview(numericSpotId, reviewToDelete));
-    setShowDeleteModal(false);
-    setReviewToDelete(null);
-  };
 
-  const cancelDeleteReview = () => {
-    setShowDeleteModal(false);
-    setReviewToDelete(null);
-  };
+
+
 
   if (!spot) return <p>Loading...</p>;
 
