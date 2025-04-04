@@ -2,12 +2,10 @@ import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { useModal } from "../../context/Modal";
 import * as sessionActions from "../../store/session";
-import "./SignupForm.css";
 
 function SignupFormModal() {
   const dispatch = useDispatch();
   const { closeModal } = useModal();
-
 
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
@@ -15,8 +13,6 @@ function SignupFormModal() {
   const [lastName, setLastName] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-
-
   const [errors, setErrors] = useState({});
 
   const handleSubmit = async (e) => {
@@ -80,7 +76,6 @@ function SignupFormModal() {
     }
   };
 
-
   const isSignUpDisabled = () => {
     return (
       !email.trim() ||
@@ -94,79 +89,106 @@ function SignupFormModal() {
   };
 
   return (
-    <div className="signup-modal">
-      <h1 className="signup-label">Sign Up</h1>
-      <form className="signup-form" onSubmit={handleSubmit}>
-        <label>
-          Email
+    <div className="p-6 max-w-md mx-auto">
+      <h1 className="text-2xl font-bold mb-6 text-gray-800 text-center">Sign Up</h1>
+      <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
+        {/* Email Field */}
+        <div>
+          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="email">
+            Email
+          </label>
           <input
-            type="text"
+            id="email"
+            type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-
+            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
           />
-        </label>
-        {errors.email && <p className="error">{errors.email}</p>}
+          {errors.email && <p className="text-red-500 text-xs italic mt-1">{errors.email}</p>}
+        </div>
 
-        <label>
-          Username
+        {/* Username Field */}
+        <div>
+          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="username">
+            Username
+          </label>
           <input
+            id="username"
             type="text"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
-
+            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
           />
-        </label>
-        {errors.username && <p className="error">{errors.username}</p>}
+          {errors.username && <p className="text-red-500 text-xs italic mt-1">{errors.username}</p>}
+        </div>
 
-        <label>
-          First Name
+        {/* First Name Field */}
+        <div>
+          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="firstName">
+            First Name
+          </label>
           <input
+            id="firstName"
             type="text"
             value={firstName}
             onChange={(e) => setFirstName(e.target.value)}
-
+            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
           />
-        </label>
-        {errors.firstName && <p className="error">{errors.firstName}</p>}
+          {errors.firstName && <p className="text-red-500 text-xs italic mt-1">{errors.firstName}</p>}
+        </div>
 
-        <label>
-          Last Name
+        {/* Last Name Field */}
+        <div>
+          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="lastName">
+            Last Name
+          </label>
           <input
+            id="lastName"
             type="text"
             value={lastName}
             onChange={(e) => setLastName(e.target.value)}
-
+            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
           />
-        </label>
-        {errors.lastName && <p className="error">{errors.lastName}</p>}
+          {errors.lastName && <p className="text-red-500 text-xs italic mt-1">{errors.lastName}</p>}
+        </div>
 
-        <label>
-          Password
+        {/* Password Field */}
+        <div>
+          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="password">
+            Password
+          </label>
           <input
+            id="password"
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-
+            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
           />
-        </label>
-        {errors.password && <p className="error">{errors.password}</p>}
+          {errors.password && <p className="text-red-500 text-xs italic mt-1">{errors.password}</p>}
+        </div>
 
-        <label>
-          Confirm Password
+        {/* Confirm Password Field */}
+        <div>
+          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="confirmPassword">
+            Confirm Password
+          </label>
           <input
+            id="confirmPassword"
             type="password"
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
-
+            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
           />
-        </label>
-        {errors.confirmPassword && <p className="error">{errors.confirmPassword}</p>}
+          {errors.confirmPassword && <p className="text-red-500 text-xs italic mt-1">{errors.confirmPassword}</p>}
+        </div>
 
+        {/* Submit Button */}
         <button
           type="submit"
           disabled={isSignUpDisabled()}
-          className={isSignUpDisabled() ? "disabled" : ""}
+          className={`mt-4 bg-powder-blue hover:bg-blue-300 text-white font-bold py-2 px-4 rounded-full focus:outline-none focus:shadow-outline transition-colors ${
+            isSignUpDisabled() ? 'opacity-50 cursor-not-allowed' : ''
+          }`}
         >
           Sign Up
         </button>

@@ -8,6 +8,7 @@ import SpotDetails from './components/SpotDetailsPage/SpotDetails';
 import CreateSpotForm from './components/CreateSpotFormPage/CreateSpotForm';
 import ManageSpots from './components/SpotsList/ManageSpots';
 import UpdateSpotForm from './components/UpdateSpotFormPage/UpdateSpotForm';
+import './index.css';
 
 function Layout() {
   const dispatch = useDispatch();

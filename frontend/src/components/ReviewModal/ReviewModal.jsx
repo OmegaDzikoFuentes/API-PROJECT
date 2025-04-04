@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { createReview } from "../../store/reviews";
 import { useModal } from "../../context/Modal";
-import "./ReviewModal.css";
+
 
 function ReviewModal({ spotId }) {
   const dispatch = useDispatch();

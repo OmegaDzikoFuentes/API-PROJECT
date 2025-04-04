@@ -3,18 +3,17 @@ import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { NavLink } from "react-router-dom";
 import { GiAztecCalendarSun } from "react-icons/gi";
-import { motion, AnimatePresence } from "framer-motion";
 import * as sessionActions from "../../store/session";
 import LoginFormModal from "../LoginFormModal/LoginFormModal";
 import SignupFormModal from "../SignupFormModal/SignupFormModal";
 import OpenModalButton from "../OpenModalButton/OpenModalButton";
-import "./ProfileButton.css"
 
-function ProfileButton({ user }) {
+function ProfileButton({ user, isMobile, onCloseMenu }) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [showMenu, setShowMenu] = useState(false);
   const ulRef = useRef();
+  const buttonRef = useRef();
 
   const toggleMenu = (e) => {
     e.stopPropagation();
@@ -25,7 +24,8 @@ function ProfileButton({ user }) {
     if (!showMenu) return;
 
     const closeMenu = (e) => {
-      if (ulRef.current && !ulRef.current.contains(e.target)) {
+      if (ulRef.current && !ulRef.current.contains(e.target) && 
+          buttonRef.current && !buttonRef.current.contains(e.target)) {
         setShowMenu(false);
       }
     };
@@ -40,82 +40,76 @@ function ProfileButton({ user }) {
     await dispatch(sessionActions.logout());
     navigate("/");
     setShowMenu(false);
+    if (onCloseMenu) onCloseMenu();
   };
 
-  const menuVariants = {
-    hidden: { opacity: 0, y: -20 },
-    visible: { opacity: 1, y: 0 },
+  const handleMenuItemClick = () => {
+    setShowMenu(false);
+    if (onCloseMenu) onCloseMenu();
   };
 
   return (
-    <div className="profile-button">
-      <motion.button
+    <div className="relative">
+      <button
+        ref={buttonRef}
         onClick={toggleMenu}
-        className="menu-button"
-        whileHover={{ scale: 1.1 }}
-        whileTap={{ scale: 0.9 }}
+        className="flex items-center gap-2 border border-gray-300 rounded-full py-2 px-4 hover:shadow-md transition-all duration-200"
       >
-        <GiAztecCalendarSun />
-      </motion.button>
-      <AnimatePresence>
-        {showMenu && (
-          <motion.ul
-            className="profile-dropdown"
-            ref={ulRef}
-            variants={menuVariants}
-            initial="hidden"
-            animate="visible"
-            exit="hidden"
-            transition={{ type: "spring", stiffness: 300, damping: 30 }}
-          >
-            {user ? (
-              <>
-                <motion.li className="button-detail" whileHover={{ x: 5 }}>
+        <GiAztecCalendarSun className="h-5 w-5" />
+        <span className="hidden md:inline">Menu</span>
+      </button>
+      
+      {showMenu && (
+        <ul 
+          className={`absolute right-0 mt-2 w-60 bg-white shadow-lg rounded-md py-2 z-50 ${isMobile ? 'top-full' : 'top-12'}`} 
+          ref={ulRef}
+        >
+          {user ? (
+            <>
+              <li className="px-4 py-2 border-b border-gray-100">
+                <div className="text-gray-800 font-semibold">
                   Hello, {user.firstName}
-                </motion.li>
-                <motion.li className="button-detail" whileHover={{ x: 5 }}>
-                  {user.email}
-                </motion.li>
-                <motion.li whileHover={{ x: 5 }}>
-                  <NavLink
-                    className="button-detail manage-spots"
-                    to="/manage-spots"
-                    onClick={() => setShowMenu(false)}
-                  >
-                       Manage Spots
-                  </NavLink>
-                </motion.li>
-                <motion.li className="button-detail" whileHover={{ x: 5 }}>
-                  <motion.button
-                    onClick={logout}
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                  >
-                    Log Out
-                  </motion.button>
-                </motion.li>
-              </>
-            ) : (
-              <>
-                <motion.li className="button-detail" whileHover={{ x: 5 }}>
-                  <OpenModalButton
-                    modalComponent={<LoginFormModal />}
-                    buttonText="Log In"
-                    onButtonClick={() => setShowMenu(false)}
-                  />
-                </motion.li>
-                <motion.li className="button-detail" whileHover={{ x: 5 }}>
-                  <OpenModalButton
-                    modalComponent={<SignupFormModal />}
-                    buttonText="Sign Up"
-                    onButtonClick={() => setShowMenu(false)}
-                  />
-                </motion.li>
-              </>
-            )}
-          </motion.ul>
-        )}
-      </AnimatePresence>
+                </div>
+                <div className="text-gray-600 text-sm truncate">{user.email}</div>
+              </li>
+              <li>
+                <NavLink
+                  to="/manage-spots"
+                  className="block px-4 py-2 text-gray-800 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 transition duration-150 ease-in-out"
+                  onClick={handleMenuItemClick}
+                >
+                  Manage Spots
+                </NavLink>
+              </li>
+              <li>
+                <button
+                  onClick={logout}
+                  className="block w-full text-left px-4 py-2 text-gray-800 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 transition duration-150 ease-in-out"
+                >
+                  Log Out
+                </button>
+              </li>
+            </>
+          ) : (
+            <>
+              <li className="px-4 py-2">
+                <OpenModalButton
+                  modalComponent={<LoginFormModal />}
+                  buttonText="Log In"
+                  onButtonClick={handleMenuItemClick}
+                />
+              </li>
+              <li className="px-4 py-2">
+                <OpenModalButton
+                  modalComponent={<SignupFormModal />}
+                  buttonText="Sign Up"
+                  onButtonClick={handleMenuItemClick}
+                />
+              </li>
+            </>
+          )}
+        </ul>
+      )}
     </div>
   );
 }

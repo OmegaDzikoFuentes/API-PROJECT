@@ -7,7 +7,7 @@ import { getSpotById } from "../../store/spots";
 import OpenModalButton from "../OpenModalButton/OpenModalButton";
 import ReviewModal from "../ReviewModal/ReviewModal";
 import DeleteReviewModal from "../DeleteReviewModal/DeleteReviewModal";
-import "./SpotDetails.css";
+
 
 function SpotDetails() {
   const { spotId } = useParams();
@@ -39,24 +39,17 @@ function SpotDetails() {
   const hasReviewed = reviews.some((review) => review.userId === user?.id);
 
   useEffect(() => {
-// Dispatch the action to fetch the spot details when the component mounts
-dispatch(getSpotById(spotId))
-.then(() => {
-setLoading(false); // Set loading to false once the data is fetched
-})
-.catch((err) => {
-console.error("Error fetching spot data:", err);
-setLoading(false); // Set loading to false even on error
-});
-}, [dispatch, spotId]);
+    dispatch(getSpotById(spotId))
+      .then(() => {
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.error("Error fetching spot data:", err);
+        setLoading(false);
+      });
+  }, [dispatch, spotId]);
 
-// If loading, display a loading message or spinner
-
-
-
-
-
-  if (!spot) return <p>Loading...</p>;
+  if (!spot) return <div className="text-center py-8">Loading...</div>;
 
   const handleReserveClick = () => {
     alert("Feature coming soon");
@@ -64,157 +57,159 @@ setLoading(false); // Set loading to false even on error
 
   const defaultImage =
     "https://images.pexels.com/photos/2294465/pexels-photo-2294465.jpeg";
-    const defaultImage1 = "https://images.pexels.com/photos/14737628/pexels-photo-14737628.jpeg"
-    const defaultImage2 = "https://images.pexels.com/photos/22598409/pexels-photo-22598409/free-photo-of-top-view-of-neatly-folded-towels-and-a-bathrobe.jpeg"
-    const defaultImage3 = "https://images.pexels.com/photos/9318350/pexels-photo-9318350.jpeg"
-    const defaultImage4 = "https://images.pexels.com/photos/19084143/pexels-photo-19084143/free-photo-of-view-of-a-modern-resort-with-a-swimming-pool-in-the-evening.jpeg"
-    const imageVariants = {
-      hover: { scale: 1.05, transition: { duration: 0.3 } }
-    };
-  
-    if (loading) {
-      return (
-        <div className="loading-container">
-          <motion.div
-            className="loading-spinner"
-            animate={{ rotate: 360 }}
-            transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-          />
-          <p>Loading...</p>
-        </div>
-      );
-    }
-  
-    if (!spot) return <p>Spot not found</p>;
-  
+  const defaultImage1 = "https://images.pexels.com/photos/14737628/pexels-photo-14737628.jpeg"
+  const defaultImage2 = "https://images.pexels.com/photos/22598409/pexels-photo-22598409/free-photo-of-top-view-of-neatly-folded-towels-and-a-bathrobe.jpeg"
+  const defaultImage3 = "https://images.pexels.com/photos/9318350/pexels-photo-9318350.jpeg"
+  const defaultImage4 = "https://images.pexels.com/photos/19084143/pexels-photo-19084143/free-photo-of-view-of-a-modern-resort-with-a-swimming-pool-in-the-evening.jpeg"
+
+  const imageVariants = {
+    hover: { scale: 1.05, transition: { duration: 0.3 } }
+  };
+
+  if (loading) {
     return (
-      <motion.div
-        className="spot-details-container"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.5 }}
-      >
-        <h1 className="spot-name-label">{spot.name}</h1>
-        <p className="location">{`${spot.city}, ${spot.state}, ${spot.country}`}</p>
-  
-        <div className="images-container">
-          <motion.img
-            src={spot.previewImage || defaultImage}
-            alt={spot.name}
-            className="main-image"
-            variants={imageVariants}
-            whileHover="hover"
-          />
-          <div className="small-images-grid">
-            {[defaultImage1, defaultImage2, defaultImage3, defaultImage4].map((img, index) => (
-              <motion.img
-                key={index}
-                src={spot.SpotImages?.[index + 1]?.url || img}
-                alt={`Spot image ${index + 1}`}
-                variants={imageVariants}
-                whileHover="hover"
-              />
-            ))}
-          </div>
+      <div className="flex justify-center items-center h-screen">
+        <motion.div
+          className="w-16 h-16 border-4 border-dashed border-powder-blue rounded-full animate-spin"
+          animate={{ rotate: 360 }}
+          transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+        />
+        <p className="ml-4">Loading...</p>
+      </div>
+    );
+  }
+
+  if (!spot) return <p className="text-center py-8">Spot not found</p>;
+
+  return (
+    <motion.div
+      className="container mx-auto p-4 pt-20" // Basic container with padding
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.5 }}
+    >
+      <h1 className="text-3xl font-bold mb-2">{spot.name}</h1>
+      <p className="text-gray-600 mb-4">{`${spot.city}, ${spot.state}, ${spot.country}`}</p>
+
+      <div className="flex flex-col md:flex-row gap-4 mb-6">
+        <motion.img
+          src={spot.previewImage || defaultImage}
+          alt={spot.name}
+          className="md:w-1/2 h-auto object-cover rounded-md shadow-md" // Main image takes half width on medium screens and up
+          variants={imageVariants}
+          whileHover="hover"
+        />
+        <div className="md:w-1/2 grid grid-cols-2 grid-rows-2 gap-2"> {/* Grid for small images */}
+          {[defaultImage1, defaultImage2, defaultImage3, defaultImage4].map((img, index) => (
+            <motion.img
+              key={index}
+              src={spot.SpotImages?.[index + 1]?.url || img}
+              alt={`Spot image ${index + 1}`}
+              className="w-full h-full object-cover rounded-md shadow-md" // Each small image fills its grid cell
+              variants={imageVariants}
+              whileHover="hover"
+            />
+          ))}
         </div>
-  
-        <div className="details-content">
-          <div className="spot-info">
-            <p className="hosted-by">
-              {spot.Owner?.firstName && spot.Owner?.lastName
-                ? `Hosted by ${spot.Owner.firstName} ${spot.Owner.lastName}`
-                : "Loading... please refresh"}
-            </p>
-            <p className="description">{spot.description}</p>
-          </div>
-  
-          <motion.div
-            className="reserve-box"
-            initial={{ y: 20, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ delay: 0.3 }}
-          >
-            <div className="reserve-box-content">
-              <p className="price">{`$${spot.price} / night`}</p>
-              <div className="rating-info">
-                <span>{`⭐ ${averageRating || "New"}`}</span>
-                {reviewsCount !== undefined && (
-                  <span>· {`${reviewsCount} ${reviewsCount === 1 ? "review" : "reviews"}`}</span>
-                )}
-              </div>
+      </div>
+
+      <div className="md:grid md:grid-cols-2 md:gap-8">
+        <div className="spot-info">
+          <p className="text-lg font-semibold mb-2">
+            {spot.Owner?.firstName && spot.Owner?.lastName
+              ? `Hosted by ${spot.Owner.firstName} ${spot.Owner.lastName}`
+              : "Loading... please refresh"}
+          </p>
+          <p className="text-gray-700">{spot.description}</p>
+        </div>
+
+        <motion.div
+          className="bg-white rounded-md shadow-md p-4"
+          initial={{ y: 20, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ delay: 0.3 }}
+        >
+          <div className="flex justify-between items-center mb-4">
+            <p className="text-2xl font-bold">{`$${spot.price}`}<span className="text-gray-600 font-normal"> / night</span></p>
+            <div className="flex items-center text-yellow-500">
+              <span>{`⭐ ${averageRating || "New"}`}</span>
+              {reviewsCount !== undefined && (
+                <span className="ml-2 text-gray-600">· {`${reviewsCount} ${reviewsCount === 1 ? "review" : "reviews"}`}</span>
+              )}
             </div>
-            <motion.button
-              className="reserve-button"
-              onClick={handleReserveClick}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              Reserve
-            </motion.button>
-          </motion.div>
-        </div>
-  
-        <div className="reviews-section">
-          <h2>
-            {averageRating
-              ? `⭐ ${averageRating} · ${reviewsCount} ${reviewsCount === 1 ? "review" : "reviews"}`
-              : "New"}
-          </h2>
-          <div className="review-button">
-            {user && !hasReviewed && !isOwner && (
-              <OpenModalButton
-                modalComponent={<ReviewModal spotId={numericSpotId} />}
-                buttonText="Post Your Review"
-              />
-            )}
           </div>
-          {reviewsCount === 0 ? (
-            !isOwner ? (
-              <p>Be the first to post a review!</p>
-            ) : (
-              <p>No reviews yet.</p>
-            )
-          ) : (
-            <AnimatePresence>
-              <motion.ul className="reviews-list">
-                {reviews.map((review) => (
-                  <motion.li
-                    key={review.id}
-                    className="review-item"
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -20 }}
-                    transition={{ duration: 0.3 }}
-                  >
-                    <div className="review-header">
-                      <p className="review-user-name">{review.User?.firstName}</p>
-                      <p className="review-date">
-                        {new Date(review.createdAt).toLocaleDateString("en-US", {
-                          year: "numeric",
-                          month: "long",
-                        })}
-                      </p>
-                    </div>
-                    <p className="review-text">{review.review}</p>
-                    <p className="review-rating">Rating: {review.stars}⭐</p>
-                    {user?.id === review.userId && (
-                      <OpenModalButton
-                        modalComponent={
-                          <DeleteReviewModal
-                            reviewId={review.id}
-                            spotId={numericSpotId}
-                          />
-                        }
-                        buttonText="Delete Review"
-                      />
-                    )}
-                  </motion.li>
-                ))}
-              </motion.ul>
-            </AnimatePresence>
+          <motion.button
+            className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-md w-full"
+            onClick={handleReserveClick}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            Reserve
+          </motion.button>
+        </motion.div>
+      </div>
+
+      <div className="reviews-section mt-8">
+        <h2 className="text-2xl font-semibold mb-4">
+          {averageRating
+            ? `⭐ ${averageRating} · ${reviewsCount} ${reviewsCount === 1 ? "review" : "reviews"}`
+            : "New"}
+        </h2>
+        <div className="mb-4">
+          {user && !hasReviewed && !isOwner && (
+            <OpenModalButton
+              modalComponent={<ReviewModal spotId={numericSpotId} />}
+              buttonText="Post Your Review"
+            />
           )}
         </div>
-      </motion.div>
+        {reviewsCount === 0 ? (
+          !isOwner ? (
+            <p className="text-gray-700">Be the first to post a review!</p>
+          ) : (
+            <p className="text-gray-700">No reviews yet.</p>
+          )
+        ) : (
+          <AnimatePresence>
+            <motion.ul className="space-y-4">
+              {reviews.map((review) => (
+                <motion.li
+                  key={review.id}
+                  className="bg-white rounded-md shadow-md p-4"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -20 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <div className="flex justify-between items-center mb-2">
+                    <p className="font-semibold">{review.User?.firstName}</p>
+                    <p className="text-gray-500">
+                      {new Date(review.createdAt).toLocaleDateString("en-US", {
+                        year: "numeric",
+                        month: "long",
+                      })}
+                    </p>
+                  </div>
+                  <p className="text-gray-700">{review.review}</p>
+                  <p className="text-yellow-500">Rating: {review.stars}⭐</p>
+                  {user?.id === review.userId && (
+                    <OpenModalButton
+                      modalComponent={
+                        <DeleteReviewModal
+                          reviewId={review.id}
+                          spotId={numericSpotId}
+                        />
+                      }
+                      buttonText="Delete Review"
+                    />
+                  )}
+                </motion.li>
+              ))}
+            </motion.ul>
+          </AnimatePresence>
+        )}
+      </div>
+    </motion.div>
   );
 }
 

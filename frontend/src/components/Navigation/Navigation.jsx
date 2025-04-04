@@ -3,9 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlaceOfWorship, faBars, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { NavLink } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { motion, AnimatePresence } from 'framer-motion';
 import ProfileButton from "./ProfileButton";
-import "./Navigation.css";
 
 function Navigation({ isLoaded }) {
   const sessionUser = useSelector((state) => state.session.user);
@@ -22,61 +20,58 @@ function Navigation({ isLoaded }) {
   }, []);
 
   return (
-    <motion.div 
-      className={`navigation ${isScrolled ? 'scrolled' : ''}`}
-      initial={{ opacity: 0, y: -50 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
+    <nav
+      className={`fixed top-0 left-0 w-full z-50 ${
+        isScrolled ? 'shadow-md bg-white' : 'bg-white'
+      } transition-all duration-300`}
     >
-      <div className="logo">
-        <motion.div
-          whileHover={{ rotate: 360 }}
-          transition={{ duration: 0.3 }}
-        >
-          <NavLink to="/" className="nav-brand">
-          StayCation
-        </NavLink>
-          <FontAwesomeIcon icon={faPlaceOfWorship} size="2x" />
-        </motion.div>
-        
+      <div className="container mx-auto flex items-center justify-between py-3 px-4">
+        <div className="flex items-center">
+          <NavLink to="/" className="text-xl font-bold text-gray-800 hover:text-gray-600 transition-colors duration-300 flex items-center gap-2">
+            <FontAwesomeIcon icon={faPlaceOfWorship} size="lg" className="text-powder-blue" />
+            StayCation
+          </NavLink>
+        </div>
+
+        <div className="hidden md:flex items-center space-x-4">
+          {isLoaded && sessionUser && (
+            <NavLink
+              to="/spots/new"
+              className="bg-powder-blue hover:bg-blue-300 text-black font-semibold py-2 px-4 rounded-full transition-colors duration-300"
+            >
+              Create a New Spot
+            </NavLink>
+          )}
+          <ProfileButton user={sessionUser} />
+        </div>
+
+        <div className="md:hidden">
+          <button 
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} 
+            className="text-gray-600 hover:text-gray-800 focus:outline-none focus:text-gray-800 p-2"
+          >
+            <FontAwesomeIcon icon={isMobileMenuOpen ? faTimes : faBars} size="lg" />
+          </button>
+        </div>
       </div>
-      {isLoaded && (
-        <>
-          <div className="nav-links desktop-nav">
-            {sessionUser && (
-              <motion.div
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.9 }}
-              >
-                
-              </motion.div>
-            )}
-            <ProfileButton user={sessionUser} />
+
+      {isMobileMenuOpen && (
+        <div className="md:hidden bg-white shadow-md py-2 px-4">
+          {sessionUser && (
+            <NavLink
+              to="/spots/new"
+              className="block py-2 text-gray-800 hover:bg-gray-100 transition-colors duration-300"
+              onClick={() => setIsMobileMenuOpen(false)}
+            >
+              Create a New Spot
+            </NavLink>
+          )}
+          <div className="py-2">
+            <ProfileButton user={sessionUser} isMobile={true} onCloseMenu={() => setIsMobileMenuOpen(false)} />
           </div>
-          <div className="mobile-menu-icon" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
-            <FontAwesomeIcon icon={isMobileMenuOpen ? faTimes : faBars} />
-          </div>
-          <AnimatePresence>
-            {isMobileMenuOpen && (
-              <motion.div 
-                className="mobile-nav"
-                initial={{ opacity: 0, x: 300 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: 300 }}
-                transition={{ type: "spring", stiffness: 260, damping: 20 }}
-              >
-                {sessionUser && (
-                  <NavLink to="/spots/new" className="create-spot-button" onClick={() => setIsMobileMenuOpen(false)}>
-                    Create a New Spot
-                  </NavLink>
-                )}
-                
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </>
+        </div>
       )}
-    </motion.div>
+    </nav>
   );
 }
 

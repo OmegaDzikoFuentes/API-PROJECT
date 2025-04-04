@@ -1,3 +1,27 @@
-html {
-    background: #E2E5EC
+@import 'tailwindcss';
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+
+/* In your CSS file */
+@import url('https://fonts.googleapis.com/css2?family=Satisfy&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat&display=swap');
+/* Rockwell may need to be included as a local font */
+
+:root {
+  --powder-blue: #B0E0E6;
+}
+
+.text-powder-blue {
+  color: var(--powder-blue);
+}
+
+.bg-powder-blue {
+  background-color: var(--powder-blue);
+}
+
+.border-powder-blue {
+  border-color: var(--powder-blue);
 }

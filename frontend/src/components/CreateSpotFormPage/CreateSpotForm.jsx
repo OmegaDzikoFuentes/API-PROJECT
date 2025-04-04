@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { createSpot } from "../../store/spots";
-import "./CreateSpotForm.css";
+
 import { motion, AnimatePresence } from "framer-motion";
 
 function CreateSpotForm() {
@@ -89,30 +89,31 @@ function CreateSpotForm() {
 
   return (
     <motion.div
-      className="create-spot-container"
+      className="container mx-auto p-8"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
     >
-      <h1>Create a New Spot</h1>
-      <form onSubmit={handleSubmit}>
-        <motion.div className="form-section" initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.1 }}>
-          <h2>Where&apos;s your place located?</h2>
-          <p>Guests will only get your exact address once they booked a reservation.</p>
+      <h1 className="text-3xl font-bold mb-6 text-gray-800">Create a New Spot</h1>
+      <form onSubmit={handleSubmit} className="flex flex-col gap-6">
+        <motion.div className="bg-white rounded-md shadow-md p-6" initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.1 }}>
+          <h2 className="text-xl font-semibold mb-4 text-gray-700">Where&apos;s your place located?</h2>
+          <p className="text-gray-600 mb-4">Guests will only get your exact address once they booked a reservation.</p>
           {["country", "address", "city", "state"].map((field) => (
-            <motion.div key={field} className="input-group" whileHover={{ scale: 1.02 }}>
-              <label htmlFor={field}>{field.charAt(0).toUpperCase() + field.slice(1)}</label>
+            <motion.div key={field} className="mb-4" whileHover={{ scale: 1.02 }}>
+              <label htmlFor={field} className="block text-gray-700 text-sm font-bold mb-2">{field.charAt(0).toUpperCase() + field.slice(1)}</label>
               <input
                 id={field}
                 name={field}
                 value={formData[field]}
                 onChange={handleChange}
                 placeholder={field}
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               />
               <AnimatePresence>
                 {errors[field] && (
                   <motion.p
-                    className="error"
+                    className="text-red-500 text-xs italic mt-1"
                     initial={{ opacity: 0, y: -10 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -10 }}
@@ -126,10 +127,11 @@ function CreateSpotForm() {
         </motion.div>
 
         {/* Latitude and Longitude Section */}
-        <motion.div className="form-section" initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.2 }}>
-          <div className="input-group-inline">
-            <motion.div className="input-group" whileHover={{ scale: 1.02 }}>
-              <label htmlFor="lat">Latitude</label>
+        <motion.div className="bg-white rounded-md shadow-md p-6" initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.2 }}>
+          <h2 className="text-xl font-semibold mb-4 text-gray-700">Latitude and Longitude</h2>
+          <div className="flex gap-4 mb-4">
+            <motion.div className="w-1/2" whileHover={{ scale: 1.02 }}>
+              <label htmlFor="lat" className="block text-gray-700 text-sm font-bold mb-2">Latitude</label>
               <input
                 id="lat"
                 name="lat"
@@ -138,11 +140,12 @@ function CreateSpotForm() {
                 value={formData.lat}
                 onChange={handleChange}
                 placeholder="Latitude"
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               />
               <AnimatePresence>
                 {errors.lat && (
                   <motion.p
-                    className="error"
+                    className="text-red-500 text-xs italic mt-1"
                     initial={{ opacity: 0, y: -10 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -10 }}
@@ -153,8 +156,8 @@ function CreateSpotForm() {
               </AnimatePresence>
             </motion.div>
 
-            <motion.div className="input-group" whileHover={{ scale: 1.02 }}>
-              <label htmlFor="lng">Longitude</label>
+            <motion.div className="w-1/2" whileHover={{ scale: 1.02 }}>
+              <label htmlFor="lng" className="block text-gray-700 text-sm font-bold mb-2">Longitude</label>
               <input
                 id="lng"
                 name="lng"
@@ -163,11 +166,12 @@ function CreateSpotForm() {
                 value={formData.lng}
                 onChange={handleChange}
                 placeholder="Longitude"
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               />
               <AnimatePresence>
                 {errors.lng && (
                   <motion.p
-                    className="error"
+                    className="text-red-500 text-xs italic mt-1"
                     initial={{ opacity: 0, y: -10 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -10 }}
@@ -181,20 +185,21 @@ function CreateSpotForm() {
         </motion.div>
 
         {/* Description Section */}
-        <motion.div className="form-section" initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.3 }}>
-          <h2>Describe your place to guests</h2>
-          <p>Mention the best features of your space, any special amenities like fast wifi or parking, and what you love about the neighborhood.</p>
-          <motion.div className="input-group" whileHover={{ scale: 1.02 }}>
+        <motion.div className="bg-white rounded-md shadow-md p-6" initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.3 }}>
+          <h2 className="text-xl font-semibold mb-4 text-gray-700">Describe your place to guests</h2>
+          <p className="text-gray-600 mb-4">Mention the best features of your space, any special amenities like fast wifi or parking, and what you love about the neighborhood.</p>
+          <motion.div className="mb-4" whileHover={{ scale: 1.02 }}>
             <textarea
               name="description"
               value={formData.description}
               onChange={handleChange}
               placeholder="Please write at least 30 characters"
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline h-32"
             />
             <AnimatePresence>
               {errors.description && (
                 <motion.p
-                  className="error"
+                  className="text-red-500 text-xs italic mt-1"
                   initial={{ opacity: 0, y: -10 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -10 }}
@@ -206,23 +211,24 @@ function CreateSpotForm() {
           </motion.div>
         </motion.div>
 
-           {/* Title Section */}
-           <motion.div className="form-section" initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.4 }}>
-          <h2>Create a title for your spot</h2>
-          <p>Catch guests&apos; attention with a spot title that highlights what makes your place special.</p>
-          <motion.div className="input-group" whileHover={{ scale: 1.02 }}>
-            <label htmlFor="name">Name of your spot</label>
+        {/* Title Section */}
+        <motion.div className="bg-white rounded-md shadow-md p-6" initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.4 }}>
+          <h2 className="text-xl font-semibold mb-4 text-gray-700">Create a title for your spot</h2>
+          <p className="text-gray-600 mb-4">Catch guests&apos; attention with a spot title that highlights what makes your place special.</p>
+          <motion.div className="mb-4" whileHover={{ scale: 1.02 }}>
+            <label htmlFor="name" className="block text-gray-700 text-sm font-bold mb-2">Name of your spot</label>
             <input
               id="name"
               name="name"
               value={formData.name}
               onChange={handleChange}
               placeholder="Name of your spot"
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             />
             <AnimatePresence>
               {errors.name && (
                 <motion.p
-                  className="error"
+                  className="text-red-500 text-xs italic mt-1"
                   initial={{ opacity: 0, y: -10 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -10 }}
@@ -235,11 +241,11 @@ function CreateSpotForm() {
         </motion.div>
 
         {/* Price Section */}
-        <motion.div className="form-section" initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.5 }}>
-          <h2>Set a base price for your spot</h2>
-          <p>Competitive pricing can help your listing stand out and rank higher in search results.</p>
-          <motion.div className="input-group" whileHover={{ scale: 1.02 }}>
-            <label htmlFor="price">Price per night (USD)</label>
+        <motion.div className="bg-white rounded-md shadow-md p-6" initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.5 }}>
+          <h2 className="text-xl font-semibold mb-4 text-gray-700">Set a base price for your spot</h2>
+          <p className="text-gray-600 mb-4">Competitive pricing can help your listing stand out and rank higher in search results.</p>
+          <motion.div className="mb-4" whileHover={{ scale: 1.02 }}>
+            <label htmlFor="price" className="block text-gray-700 text-sm font-bold mb-2">Price per night (USD)</label>
             <input
               id="price"
               type="number"
@@ -247,11 +253,12 @@ function CreateSpotForm() {
               value={formData.price}
               onChange={handleChange}
               placeholder="Price per night (USD)"
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             />
             <AnimatePresence>
               {errors.price && (
                 <motion.p
-                  className="error"
+                  className="text-red-500 text-xs italic mt-1"
                   initial={{ opacity: 0, y: -10 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -10 }}
@@ -263,23 +270,24 @@ function CreateSpotForm() {
           </motion.div>
         </motion.div>
 
-         {/* Photos Section */}
-         <motion.div className="form-section" initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.6 }}>
-          <h2>Liven up your spot with photos</h2>
-          <p>Submit a link to at least one photo to publish your spot.</p>
-          <motion.div className="input-group" whileHover={{ scale: 1.02 }}>
-            <label htmlFor="previewImageUrl">Preview Image URL</label>
+        {/* Photos Section */}
+        <motion.div className="bg-white rounded-md shadow-md p-6" initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.6 }}>
+          <h2 className="text-xl font-semibold mb-4 text-gray-700">Liven up your spot with photos</h2>
+          <p className="text-gray-600 mb-4">Submit a link to at least one photo to publish your spot.</p>
+          <motion.div className="mb-4" whileHover={{ scale: 1.02 }}>
+            <label htmlFor="previewImageUrl" className="block text-gray-700 text-sm font-bold mb-2">Preview Image URL</label>
             <input
               id="previewImageUrl"
               name="previewImageUrl"
               value={formData.previewImageUrl}
               onChange={handleChange}
               placeholder="Preview Image URL"
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             />
             <AnimatePresence>
               {errors.previewImageUrl && (
                 <motion.p
-                  className="error"
+                  className="text-red-500 text-xs italic mt-1"
                   initial={{ opacity: 0, y: -10 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -10 }}
@@ -290,23 +298,24 @@ function CreateSpotForm() {
             </AnimatePresence>
           </motion.div>
 
-           {[...Array(4)].map((_, index) => (
-            <motion.div key={`image${index + 1}`} className="input-group" whileHover={{ scale: 1.02 }}>
-              <label htmlFor={`image${index + 1}`}>Image URL</label>
+          {[...Array(4)].map((_, index) => (
+            <motion.div key={`image${index + 1}`} className="mb-4" whileHover={{ scale: 1.02 }}>
+              <label htmlFor={`image${index + 1}`} className="block text-gray-700 text-sm font-bold mb-2">Image URL</label>
               <input
                 id={`image${index + 1}`}
                 name={`image${index + 1}`}
                 value={formData[`image${index + 1}`]}
                 onChange={handleChange}
                 placeholder="Image URL"
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               />
             </motion.div>
           ))}
         </motion.div>
 
-
         <motion.button
           type="submit"
+          className="bg-powder-blue hover:bg-blue-300 text-white font-bold py-3 px-6 rounded-full focus:outline-none focus:shadow-outline"
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
         >
